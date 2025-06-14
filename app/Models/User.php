@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'role', // Added 'role' to allow mass assignment
     ];
 
     /**
@@ -47,10 +48,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Relationship: User has one TelegramUser
+     * Check if the user is an administrator.
+     * This function is new.
+     *
+     * @return bool
      */
-    public function telegramUser()
+    public function isAdmin()
     {
-        return $this->hasOne(TelegramUser::class);
+        // This checks if the user's 'role' attribute is 'admin'
+        return $this->role === 'admin';
     }
 }

@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - University of Innovation</title>
+    <title>Welcome - National University of Management</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS and Vite assets -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
+    <!-- Alpine.js for interactivity -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- Custom Styles -->
     <style>
         /* Use Poppins as the default font */
@@ -53,8 +56,10 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-   <!-- Navbar -->
-    @include('layouts.navbar')
+    <!-- Navbar Component -->
+    <div class="absolute top-0 left-0 w-full">
+        <x-navbar />
+    </div>
 
     <!-- Header & Hero Section -->
     <header id="home" class="hero-bg h-screen flex flex-col items-center justify-center text-white text-center p-4">
@@ -126,8 +131,8 @@
     <!-- Footer -->
     <footer class="bg-gray-900 text-white">
         <div class="container mx-auto px-6 py-8 text-center">
-            <p>&copy; All Rights Reserved.</p>
-            <p class="text-gray-400 text-sm mt-2">St.96 Christopher Howes Phnom Penh BS16, AP18</p>
+            <p>&copy; 2024 National University of Management. All Rights Reserved.</p>
+            <p class="text-gray-400 text-sm mt-2">St. 96 Christopher Howes, Phnom Penh, Cambodia</p>
         </div>
     </footer>
 
