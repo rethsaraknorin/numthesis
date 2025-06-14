@@ -4,6 +4,17 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,6 +29,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 require __DIR__.'/auth.php';
 
-route::get('admin/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'admin']);
+// This is the route for the admin dashboard.
+// I've added ->name('admin.dashboard') to it.
+Route::get('admin/dashboard', [HomeController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.dashboard');
