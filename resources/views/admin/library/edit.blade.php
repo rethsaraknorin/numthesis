@@ -9,7 +9,7 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900 dark:text-gray-100">
-          <form method="POST" action="{{ route('admin.library.update', $book) }}" class="space-y-6">
+          <form method="POST" action="{{ route('admin.library.update', ['library' => $book->id]) }}" class="space-y-6" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -30,12 +30,33 @@
                 <x-input-error class="mt-2" :messages="$errors->get('author')" />
               </div>
 
-              <!-- ISBN -->
+              <!-- Book Link -->
               <div>
-                <x-input-label for="isbn" :value="__('ISBN')" />
-                <x-text-input id="isbn" name="isbn" type="text" class="mt-1 block w-full"
-                  :value="old('isbn', $book->isbn)" required />
-                <x-input-error class="mt-2" :messages="$errors->get('isbn')" />
+                <x-input-label for="book_link" :value="__('Book Link')" />
+                <x-text-input id="book_link" name="book_link" type="url" class="mt-1 block w-full"
+                  :value="old('book_link', $book->book_link)" placeholder="https://" />
+                <x-input-error class="mt-2" :messages="$errors->get('book_link')" />
+              </div>
+
+              <!-- Picture -->
+              <div>
+                <x-input-label for="picture" :value="__('Book Cover')" />
+                @if($book->picture)
+                <div class="mb-2">
+                  <img src="{{ asset('storage/' . $book->picture) }}"
+                    alt="{{ $book->title }}"
+                    class="w-32 h-40 object-cover rounded">
+                </div>
+                @endif
+                <input type="file" id="picture" name="picture" accept="image/*"
+                  class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-300
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-indigo-50 file:text-indigo-700
+                                    hover:file:bg-indigo-100
+                                    dark:file:bg-gray-700 dark:file:text-gray-200" />
+                <x-input-error class="mt-2" :messages="$errors->get('picture')" />
               </div>
 
               <!-- Publisher -->
@@ -53,26 +74,6 @@
                   min="1800" max="{{ date('Y') }}" class="mt-1 block w-full"
                   :value="old('publication_year', $book->publication_year)" required />
                 <x-input-error class="mt-2" :messages="$errors->get('publication_year')" />
-              </div>
-
-              <!-- Copies Available -->
-              <div>
-                <x-input-label for="copies_available" :value="__('Copies Available')" />
-                <x-text-input id="copies_available" name="copies_available" type="number"
-                  min="0" class="mt-1 block w-full"
-                  :value="old('copies_available', $book->copies_available)" required />
-                <x-input-error class="mt-2" :messages="$errors->get('copies_available')" />
-              </div>
-
-              <!-- Status -->
-              <div>
-                <x-input-label for="status" :value="__('Status')" />
-                <select id="status" name="status" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
-                  <option value="available" {{ old('status', $book->status) == 'available' ? 'selected' : '' }}>Available</option>
-                  <option value="borrowed" {{ old('status', $book->status) == 'borrowed' ? 'selected' : '' }}>Borrowed</option>
-                  <option value="maintenance" {{ old('status', $book->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                </select>
-                <x-input-error class="mt-2" :messages="$errors->get('status')" />
               </div>
             </div>
 
