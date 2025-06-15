@@ -74,11 +74,11 @@
                   </td>
                   <td class="px-6 py-4 text-center">
                     <div class="flex justify-center space-x-3">
-                      <a href="{{ route('admin.library.edit', $book) }}"
+                      <a href="{{ route('admin.library.edit', ['library' => $book->id]) }}"
                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                         Edit
                       </a>
-                      <form action="{{ route('admin.library.destroy', $book) }}"
+                      <form action="{{ route('admin.library.destroy', ['library' => $book->id]) }}"
                         method="POST"
                         onsubmit="return confirm('Are you sure you want to delete this book?');"
                         class="inline">

@@ -57,15 +57,15 @@ class LibraryController extends Controller
     /**
      * Show the form for editing the specified book.
      */
-    public function edit(Book $book)
+    public function edit(Book $library)
     {
-        return view('admin.library.edit', compact('book'));
+        return view('admin.library.edit', ['book' => $library]);
     }
 
     /**
      * Update the specified book in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Book $library)
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -80,14 +80,14 @@ class LibraryController extends Controller
         // Handle file upload
         if ($request->hasFile('picture')) {
             // Delete old picture if exists
-            if ($book->picture) {
-                Storage::disk('public')->delete($book->picture);
+            if ($library->picture) {
+                Storage::disk('public')->delete($library->picture);
             }
             $path = $request->file('picture')->store('books', 'public');
             $validated['picture'] = $path;
         }
 
-        $book->update($validated);
+        $library->update($validated);
 
         return redirect()
             ->route('admin.library.index')
@@ -97,14 +97,14 @@ class LibraryController extends Controller
     /**
      * Remove the specified book from storage.
      */
-    public function destroy(Book $book)
+    public function destroy(Book $library)
     {
         // Delete the book's picture if it exists
-        if ($book->picture) {
-            Storage::disk('public')->delete($book->picture);
+        if ($library->picture) {
+            Storage::disk('public')->delete($library->picture);
         }
 
-        $book->delete();
+        $library->delete();
 
         return redirect()
             ->route('admin.library.index')
