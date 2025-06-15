@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -57,5 +58,14 @@ class User extends Authenticatable
     {
         // This checks if the user's 'role' attribute is 'admin'
         return $this->role === 'admin';
+    }
+
+
+    /**
+     * The books that belong to the user.
+     */
+    public function books(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class);
     }
 }

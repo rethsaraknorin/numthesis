@@ -11,7 +11,7 @@
 
     {{-- Navigation Links --}}
     <nav class="flex flex-col space-y-2">
-        
+
         {{-- Dashboard Link --}}
         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
             {{ __('Dashboard') }}
@@ -21,9 +21,9 @@
         <x-nav-link href="#" :active="request()->routeIs('user.academics.*')">
             {{ __('Academic Program') }}
         </x-nav-link>
-        
+
         {{-- Library Link --}}
-        <x-nav-link href="#" :active="request()->routeIs('user.library.*')">
+        <x-nav-link :href="route('library.index')" :active="request()->routeIs('library.index')">
             {{ __('Library') }}
         </x-nav-link>
 
@@ -31,7 +31,7 @@
         <x-nav-link href="#" :active="request()->routeIs('user.jobs.*')">
             {{ __('Job Opportunity') }}
         </x-nav-link>
-        
+
         {{-- Chatbot Link to Telegram --}}
         <x-nav-link href="https://t.me/YOUR_BOT_USERNAME_HERE" target="_blank" :active="false">
             {{ __('Chatbot') }}
