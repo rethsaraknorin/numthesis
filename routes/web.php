@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\LibraryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,14 +39,14 @@ Route::middleware('auth')->group(function () {
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 
 // --- ADMIN ROUTES ---
 // All routes in this group are protected by the 'auth' and 'admin' middleware.
 // They are also prefixed with '/admin' in the URL and 'admin.' in the route name.
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    
+
     // Admin Dashboard (Summary Page)
     // URL: /admin/dashboard
     // Name: admin.dashboard
@@ -55,11 +56,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // URL: /admin/users
     // Name: admin.users.index
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    
-    // **THIS IS THE MISSING ROUTE**
+
     // Route to handle user deletion
     // URL: /admin/users/{user} (e.g., /admin/users/5)
     // Name: admin.users.destroy
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
+    // Library Management Routes
+    Route::resource('library', LibraryController::class);
 });

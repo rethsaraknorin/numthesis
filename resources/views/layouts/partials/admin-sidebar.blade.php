@@ -8,7 +8,7 @@
 
     {{-- Navigation Links --}}
     <nav class="flex flex-col space-y-2">
-        
+
         {{-- Dashboard Link --}}
         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
             {{ __('Dashboard') }}
@@ -18,9 +18,9 @@
         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
             {{ __('Users') }}
         </x-nav-link>
-        
+
         {{-- Library Link --}}
-        <x-nav-link href="#" :active="request()->routeIs('admin.library.*')">
+        <x-nav-link :href="route('admin.library.index')" :active="request()->routeIs('admin.library.index')">
             {{ __('Library') }}
         </x-nav-link>
 
