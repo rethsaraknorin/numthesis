@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+      x-data="themeSwitcher()"
+      x-init="init()"
+      :class="{ 'dark': isDarkMode }">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +18,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* Simple transition for the sidebar on mobile */
         .sidebar {
             transition: transform 0.3s ease-in-out;
         }
@@ -43,9 +45,19 @@
                         </svg>
                     </button>
                 </div>
-                 <!-- Top Right Navigation (User Profile Dropdown) -->
-                 <div class="flex items-center">
-                    <div class="hidden sm:flex sm:items-center sm:ms-6">
+                 <!-- Top Right Navigation (User Profile Dropdown & Theme Toggle) -->
+                 <div class="flex items-center space-x-4">
+                    <!-- NEW: Theme Toggle Button -->
+                    <button @click="toggleTheme" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                        <template x-if="!isDarkMode">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        </template>
+                        <template x-if="isDarkMode">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8.657-12.657l-.707.707M5.05 18.95l-.707.707M21 12h-1M4 12H3m15.657.343l.707.707M5.05 5.05l.707.707M12 18a6 6 0 100-12 6 6 0 000 12z"></path></svg>
+                        </template>
+                    </button>
+
+                    <div class="hidden sm:flex sm:items-center">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -95,5 +107,26 @@
             </main>
         </div>
     </div>
+    
+    <!-- NEW: Theme Switcher Alpine.js Logic -->
+    <script>
+        function themeSwitcher() {
+            return {
+                isDarkMode: false,
+                init() {
+                    if (localStorage.getItem('theme') === 'dark' || 
+                       (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        this.isDarkMode = true;
+                    } else {
+                        this.isDarkMode = false;
+                    }
+                },
+                toggleTheme() {
+                    this.isDarkMode = !this.isDarkMode;
+                    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+                }
+            }
+        }
+    </script>
 </body>
 </html>
