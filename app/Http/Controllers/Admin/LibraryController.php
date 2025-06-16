@@ -39,6 +39,7 @@ class LibraryController extends Controller
             'description' => ['nullable', 'string'],
             'book_link' => ['nullable', 'url', 'max:255'],
             'picture' => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'book_types' => ['nullable', 'string'], // Validate the incoming book types
         ]);
 
         // Handle file upload
@@ -46,6 +47,17 @@ class LibraryController extends Controller
             $path = $request->file('picture')->store('books', 'public');
             $validated['picture'] = $path;
         }
+
+        // --- MODIFICATION START ---
+        // Process the comma-separated string into a clean array
+        if (!empty($validated['book_types'])) {
+            // Explode the string by comma, trim whitespace from each item, and remove any empty items
+            $validated['book_types'] = array_filter(array_map('trim', explode(',', $validated['book_types'])));
+        } else {
+            // If the field is empty or null, store an empty array
+            $validated['book_types'] = [];
+        }
+        // --- MODIFICATION END ---
 
         Book::create($validated);
 
@@ -75,6 +87,7 @@ class LibraryController extends Controller
             'description' => ['nullable', 'string'],
             'book_link' => ['nullable', 'url', 'max:255'],
             'picture' => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'book_types' => ['nullable', 'string'], // Validate the incoming book types
         ]);
 
         // Handle file upload
@@ -86,6 +99,17 @@ class LibraryController extends Controller
             $path = $request->file('picture')->store('books', 'public');
             $validated['picture'] = $path;
         }
+
+        // --- MODIFICATION START ---
+        // Process the comma-separated string into a clean array
+        if (!empty($validated['book_types'])) {
+            // Explode the string by comma, trim whitespace from each item, and remove any empty items
+            $validated['book_types'] = array_filter(array_map('trim', explode(',', $validated['book_types'])));
+        } else {
+            // If the field is empty or null, store an empty array
+            $validated['book_types'] = [];
+        }
+        // --- MODIFICATION END ---
 
         $library->update($validated);
 

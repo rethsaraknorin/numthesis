@@ -82,3 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/library/{book}/save', [BookController::class, 'save'])->name('library.save');
     Route::delete('/library/{book}/unsave', [BookController::class, 'unsave'])->name('library.unsave');
 });
+
+
+    Route::get('/api/books', [App\Http\Controllers\BookController::class, 'apiIndex'])->name('api.books.index');
+    Route::get('/api/book-types', [App\Http\Controllers\BookController::class, 'getBookTypes'])->name('api.books.types');
