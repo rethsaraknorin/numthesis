@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LibraryController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +25,17 @@ Route::get('/', function () {
 
 // Regular User Dashboard
 Route::get('/dashboard', function () {
+    $user = auth()->user();
+
     // Redirect admins away from the user dashboard
-    if (auth()->user() && auth()->user()->isAdmin()) {
+    if ($user && $user->isAdmin()) {
         return redirect()->route('admin.dashboard');
     }
-    return view('dashboard');
+
+    // Eager load the books for the authenticated user
+    $savedBooks = $user->books()->latest()->get();
+
+    return view('dashboard', compact('savedBooks'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // User Profile Routes
@@ -64,4 +71,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Library Management Routes
     Route::resource('library', LibraryController::class);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // ... other profile routes
+
+    // User Library Routes
+    Route::get('/library', [BookController::class, 'index'])->name('library.index');
+    Route::post('/library/{book}/save', [BookController::class, 'save'])->name('library.save');
+    Route::delete('/library/{book}/unsave', [BookController::class, 'unsave'])->name('library.unsave');
 });
