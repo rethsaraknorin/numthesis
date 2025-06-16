@@ -45,7 +45,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <!-- Search Input -->
                     <div class="md:col-span-2">
-                        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Search by Title or Author</label>
+                        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Search by Title or Author') }}</label>
                         <div class="mt-1 relative rounded-md shadow-sm">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -61,12 +61,12 @@
                     </div>
                     <!-- Filter by Type Dropdown -->
                     <div>
-                        <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Filter by Type</label>
+                        <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Filter by Type') }}</label>
                         <select id="type" name="type"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                                 x-model="filterType"
                                 @change="applyFilters()">
-                            <option value="">All Types</option>
+                            <option value="">{{ __('All Types') }}</option>
                             <template x-for="type in bookTypes" :key="type">
                                 <option :value="type" x-text="type"></option>
                             </template>
@@ -110,7 +110,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="w-full px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition">
-                                            Unsave
+                                            {{ __('Unsave') }}
                                         </button>
                                     </form>
                                 </template>
@@ -118,7 +118,7 @@
                                     <form :action="'/library/' + book.id + '/save'" method="POST">
                                         @csrf
                                         <button type="submit" class="w-full px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
-                                            Save to Dashboard
+                                            {{ __('Save to Dashboard') }}
                                         </button>
                                     </form>
                                 </template>
@@ -136,11 +136,11 @@
             {{-- Pagination --}}
             <div class="mt-8 flex justify-between items-center" x-show="!isLoading && pagination.total > 0 && pagination.last_page > 1">
                 <button @click="fetchBooks(pagination.prev_page_url)" :disabled="!pagination.prev_page_url" class="px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white disabled:opacity-25 transition">
-                    Previous
+                    {{ __('Previous') }}
                 </button>
-                <span class="text-sm text-gray-700 dark:text-gray-300" x-text="`Page ${pagination.current_page} of ${pagination.last_page}`"></span>
+                <span class="text-sm text-gray-700 dark:text-gray-300" x-text="`{{ __('Page :current of :last', ['current' => '${pagination.current_page}', 'last' => '${pagination.last_page}']) }}`"></span>
                 <button @click="fetchBooks(pagination.next_page_url)" :disabled="!pagination.next_page_url" class="px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white disabled:opacity-25 transition">
-                    Next
+                    {{ __('Next') }}
                 </button>
             </div>
         </div>
