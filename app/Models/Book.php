@@ -22,7 +22,8 @@ class Book extends Model
         'publication_year',
         'description',
         'book_link',
-        'picture'
+        'picture',
+        'book_types',
     ];
 
     /**

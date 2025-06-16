@@ -1,6 +1,6 @@
 <x-admin-layout>
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+    <h2 class="font-semibold text-xl text-gray-700 dark:text-gray-200 leading-tight">
       {{ __('Library Management') }}
     </h2>
   </x-slot>
@@ -39,6 +39,7 @@
                   <th scope="col" class="px-6 py-3">Picture</th>
                   <th scope="col" class="px-6 py-3">Title</th>
                   <th scope="col" class="px-6 py-3">Author</th>
+                  <th scope="col" class="px-6 py-3">Book Types</th>
                   <th scope="col" class="px-6 py-3">Book Link</th>
                   <th scope="col" class="px-6 py-3 text-center">Actions</th>
                 </tr>
@@ -61,6 +62,17 @@
                     {{ $book->title }}
                   </th>
                   <td class="px-6 py-4">{{ $book->author }}</td>
+                  <td class="px-6 py-4">
+                    @php
+                      // Ensure book_types is an array before imploding
+                      $types = is_array($book->book_types) ? $book->book_types : json_decode($book->book_types, true);
+                    @endphp
+                    @if(!empty($types))
+                      {{ implode(', ', $types) }}
+                    @else
+                      <span class="text-gray-500">N/A</span>
+                    @endif
+                  </td>
                   <td class="px-6 py-4">
                     @if($book->book_link)
                     <a href="{{ $book->book_link }}"
@@ -94,7 +106,7 @@
                 </tr>
                 @empty
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <td colspan="5" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                  <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
                     No books found in the library.
                   </td>
                 </tr>
