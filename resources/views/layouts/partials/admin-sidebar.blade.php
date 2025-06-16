@@ -1,7 +1,7 @@
 {{-- Sidebar content --}}
 <div class="py-4 px-6 h-full">
     {{-- Logo --}}
-    <a href="{{ route('dashboard') }}" class="flex items-center text-xl font-semibold text-gray-900 dark:text-white mb-8">
+    <a href="{{ route('admin.dashboard') }}" class="flex items-center text-xl font-semibold text-gray-900 dark:text-white mb-8">
         <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
         <span class="ml-3">{{ config('app.name', 'Laravel') }}</span>
     </a>
@@ -20,7 +20,7 @@
         </x-nav-link>
 
         {{-- Library Link --}}
-        <x-nav-link :href="route('admin.library.index')" :active="request()->routeIs('admin.library.index')">
+        <x-nav-link :href="route('admin.library.index')" :active="request()->routeIs('admin.library.*')">
             {{ __('Library') }}
         </x-nav-link>
 

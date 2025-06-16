@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LibraryController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\LanguageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,5 +85,9 @@ Route::middleware('auth')->group(function () {
 });
 
 
-    Route::get('/api/books', [App\Http\Controllers\BookController::class, 'apiIndex'])->name('api.books.index');
-    Route::get('/api/book-types', [App\Http\Controllers\BookController::class, 'getBookTypes'])->name('api.books.types');
+Route::get('/api/books', [App\Http\Controllers\BookController::class, 'apiIndex'])->name('api.books.index');
+Route::get('/api/book-types', [App\Http\Controllers\BookController::class, 'getBookTypes'])->name('api.books.types');
+
+
+// Add this route
+Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
