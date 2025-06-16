@@ -33,6 +33,7 @@ class Book extends Model
      */
     protected $casts = [
         'publication_year' => 'integer',
+        'book_types' => 'array', // This will automatically handle JSON encoding/decoding
     ];
 
     /**

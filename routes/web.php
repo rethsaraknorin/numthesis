@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\LibraryController;
+use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\LanguageController;
 
@@ -55,23 +57,19 @@ require __DIR__ . '/auth.php';
 // They are also prefixed with '/admin' in the URL and 'admin.' in the route name.
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
-    // Admin Dashboard (Summary Page)
-    // URL: /admin/dashboard
-    // Name: admin.dashboard
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-
-    // Users Management Page
-    // URL: /admin/users
-    // Name: admin.users.index
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-
-    // Route to handle user deletion
-    // URL: /admin/users/{user} (e.g., /admin/users/5)
-    // Name: admin.users.destroy
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
-    // Library Management Routes
     Route::resource('library', LibraryController::class);
+
+    // Academic Program Management Routes
+    Route::resource('programs', ProgramController::class);
+    Route::post('programs/{program}/courses', [ProgramController::class, 'storeCourse'])->name('programs.courses.store');
+
+    // NEW: Course Management Routes
+    Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
+    Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+    Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
 });
 
 Route::middleware('auth')->group(function () {

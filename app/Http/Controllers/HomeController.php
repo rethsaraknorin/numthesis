@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Book; // 1. Add this line to import the Book model
+use App\Models\Book;
+use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB; // Import DB facade
 
 class HomeController extends Controller
 {
@@ -15,11 +18,42 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // Fetch users and books to display their counts on the dashboard
+        // Data for summary cards
         $users = User::where('role', 'user')->get();
-        $books = Book::all(); // 2. Add this line to get all books
+        $books = Book::all();
+        $programs = Program::all();
+        $recentUsersCount = User::where('role', 'user')->where('created_at', '>=', Carbon::now()->subWeek())->count();
+        $recentBooksCount = Book::where('created_at', '>=', Carbon::now()->subWeek())->count();
 
-        // Pass both collections to the admin dashboard view
-        return view('admin.index', compact('users', 'books')); // 3. Add 'books' here
+        // NEW: Data for "Recently Added" lists
+        $latestUsers = User::where('role', 'user')->latest()->take(5)->get();
+        $latestBooks = Book::latest()->take(5)->get();
+
+        // NEW: Data for User Registration Chart
+        $usersPerDay = User::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+            ->where('created_at', '>=', Carbon::now()->subDays(6)) // From 6 days ago to today
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->pluck('count', 'date');
+
+        $chartLabels = [];
+        $chartData = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $chartLabels[] = Carbon::parse($date)->format('D, M j');
+            $chartData[] = $usersPerDay->get($date, 0);
+        }
+
+        return view('admin.index', compact(
+            'users',
+            'books',
+            'programs',
+            'recentUsersCount',
+            'recentBooksCount',
+            'latestUsers',
+            'latestBooks',
+            'chartLabels',
+            'chartData'
+        ));
     }
 }

@@ -24,14 +24,14 @@
             {{ __('Library') }}
         </x-nav-link>
 
-        {{-- Job Opportunity Link --}}
-        <x-nav-link href="#" :active="request()->routeIs('admin.jobs.*')">
-            {{ __('Job Opportunity') }}
+        {{-- NEW: Academic Program Link --}}
+        <x-nav-link :href="route('admin.programs.index')" :active="request()->routeIs('admin.programs.*')">
+            {{ __('Academic Programs') }}
         </x-nav-link>
 
-        {{-- Academic Program Link --}}
-        <x-nav-link href="#" :active="request()->routeIs('admin.academics.*')">
-            {{ __('Academic Program') }}
+        {{-- Job Opportunity Link (Placeholder) --}}
+        <x-nav-link href="#" :active="request()->routeIs('admin.jobs.*')">
+            {{ __('Job Opportunity') }}
         </x-nav-link>
 
     </nav>
