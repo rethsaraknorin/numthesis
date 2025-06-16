@@ -108,7 +108,7 @@
         </div>
     </div>
     
-    <!-- NEW: Theme Switcher Alpine.js Logic -->
+    <!-- Theme Switcher Alpine.js Logic -->
     <script>
         function themeSwitcher() {
             return {
@@ -128,5 +128,10 @@
             }
         }
     </script>
+    
+    {{-- ADDED: Chart.js for dashboard charts --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @stack('scripts')
 </body>
 </html>
