@@ -14,7 +14,6 @@
             @method('PUT')
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- Title -->
               <div>
                 <x-input-label for="title" :value="__('Title')" />
                 <x-text-input id="title" name="title" type="text" class="mt-1 block w-full"
@@ -22,7 +21,6 @@
                 <x-input-error class="mt-2" :messages="$errors->get('title')" />
               </div>
 
-              <!-- Author -->
               <div>
                 <x-input-label for="author" :value="__('Author')" />
                 <x-text-input id="author" name="author" type="text" class="mt-1 block w-full"
@@ -30,7 +28,6 @@
                 <x-input-error class="mt-2" :messages="$errors->get('author')" />
               </div>
 
-              <!-- Book Link -->
               <div>
                 <x-input-label for="book_link" :value="__('Book Link')" />
                 <x-text-input id="book_link" name="book_link" type="url" class="mt-1 block w-full"
@@ -38,7 +35,6 @@
                 <x-input-error class="mt-2" :messages="$errors->get('book_link')" />
               </div>
 
-              <!-- Picture -->
               <div>
                 <x-input-label for="picture" :value="__('Book Cover')" />
                 @if($book->picture)
@@ -50,16 +46,15 @@
                 @endif
                 <input type="file" id="picture" name="picture" accept="image/*"
                   class="mt-1 block w-full text-sm text-gray-900 dark:text-gray-300
-                                    file:mr-4 file:py-2 file:px-4
-                                    file:rounded-md file:border-0
-                                    file:text-sm file:font-semibold
-                                    file:bg-indigo-50 file:text-indigo-700
-                                    hover:file:bg-indigo-100
-                                    dark:file:bg-gray-700 dark:file:text-gray-200" />
+                                       file:mr-4 file:py-2 file:px-4
+                                       file:rounded-md file:border-0
+                                       file:text-sm file:font-semibold
+                                       file:bg-indigo-50 file:text-indigo-700
+                                       hover:file:bg-indigo-100
+                                       dark:file:bg-gray-700 dark:file:text-gray-200" />
                 <x-input-error class="mt-2" :messages="$errors->get('picture')" />
               </div>
 
-              <!-- Publisher -->
               <div>
                 <x-input-label for="publisher" :value="__('Publisher')" />
                 <x-text-input id="publisher" name="publisher" type="text" class="mt-1 block w-full"
@@ -67,7 +62,6 @@
                 <x-input-error class="mt-2" :messages="$errors->get('publisher')" />
               </div>
 
-              <!-- Publication Year -->
               <div>
                 <x-input-label for="publication_year" :value="__('Publication Year')" />
                 <x-text-input id="publication_year" name="publication_year" type="number"
@@ -75,9 +69,23 @@
                   :value="old('publication_year', $book->publication_year)" required />
                 <x-input-error class="mt-2" :messages="$errors->get('publication_year')" />
               </div>
+              
+              <div class="md:col-span-2">
+                <x-input-label for="book_types" :value="__('Book Types (comma-separated)')" />
+                @php
+                  // Ensure book_types is an array before imploding
+                  $types_string = '';
+                  if (!empty($book->book_types)) {
+                      $types_array = is_array($book->book_types) ? $book->book_types : json_decode($book->book_types, true);
+                      $types_string = implode(', ', $types_array ?? []);
+                  }
+                @endphp
+                <x-text-input id="book_types" name="book_types" type="text" class="mt-1 block w-full"
+                  :value="old('book_types', $types_string)" placeholder="e.g. Fiction, Non-Fiction, Sci-Fi" />
+                <x-input-error class="mt-2" :messages="$errors->get('book_types')" />
+              </div>
             </div>
 
-            <!-- Description -->
             <div>
               <x-input-label for="description" :value="__('Description')" />
               <textarea id="description" name="description"

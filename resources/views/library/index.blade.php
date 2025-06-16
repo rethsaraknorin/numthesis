@@ -16,25 +16,40 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @forelse ($books as $book)
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col">
                         <img src="{{ $book->picture ? asset('storage/' . $book->picture) : 'https://placehold.co/600x400/4A5568/E2E8F0?text=No+Image' }}" alt="Cover of {{ $book->title }}" class="w-full h-48 object-cover">
-                        <div class="p-4">
+                        <div class="p-4 flex flex-col flex-grow">
                             <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ $book->title }}</h3>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">by {{ $book->author }}</p>
-                            
-                            <div class="mt-4">
+
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                @php
+                                    $types = is_array($book->book_types) ? $book->book_types : json_decode($book->book_types, true);
+                                @endphp
+                                @if(!empty($types))
+                                    @foreach($types as $type)
+                                        <span class="inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 dark:text-gray-200">
+                                            {{ $type }}
+                                        </span>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <div class="mt-auto pt-4">
                                 @if(auth()->user()->books->contains($book))
                                     <form action="{{ route('library.unsave', $book) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="w-full text-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500">
+                                        {{-- MODIFIED: Removed w-full and text-center classes --}}
+                                        <button type="submit" class="px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500">
                                             Unsave
                                         </button>
                                     </form>
                                 @else
                                     <form action="{{ route('library.save', $book) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="w-full text-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
+                                        {{-- MODIFIED: Removed w-full and text-center classes --}}
+                                        <button type="submit" class="px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
                                             Save to Dashboard
                                         </button>
                                     </form>
