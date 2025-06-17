@@ -74,12 +74,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // ... other profile routes
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // User Library Routes
     Route::get('/library', [BookController::class, 'index'])->name('library.index');
     Route::post('/library/{book}/save', [BookController::class, 'save'])->name('library.save');
     Route::delete('/library/{book}/unsave', [BookController::class, 'unsave'])->name('library.unsave');
+
+     // User-facing Academic Program Routes
+    Route::get('/academic-programs', [\App\Http\Controllers\AcademicProgramController::class, 'index'])->name('programs.index');
+    Route::get('/academic-programs/{program}', [\App\Http\Controllers\AcademicProgramController::class, 'show'])->name('programs.show');
 });
 
 

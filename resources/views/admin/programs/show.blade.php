@@ -66,30 +66,29 @@
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
                     Courses for {{ $program->name }}
                 </h3>
-                <div class="space-y-4">
+                <div class="space-y-6">
                      @forelse($program->courses->groupBy('year') as $year => $courses)
-                        <div class="p-4 border dark:border-gray-700 rounded-lg">
+                        <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                              <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2">Year {{ $year }}</h4>
-                            <div class="divide-y dark:divide-gray-700">
+                            <div class="divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach($courses->groupBy('semester') as $semester => $semesterCourses)
-                                     <div class="py-2">
-                                        <h5 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Semester {{ $semester }}</h5>
-                                        <ul class="list-inside mt-1 space-y-1">
-                                             @foreach($semesterCourses as $course)
-                                                <li class="text-gray-700 dark:text-gray-300 flex justify-between items-center">
-                                                    <span>{{ $course->name }}</span>
-                                                    <div class="flex items-center space-x-3">
-                                                        {{-- ADDED EDIT LINK --}}
-                                                        <a href="{{ route('admin.courses.edit', $course) }}" class="text-xs text-blue-500 hover:underline">Edit</a>
-                                                        <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" onsubmit="return confirm('Are you sure?');">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="text-xs text-red-500 hover:underline">Remove</button>
-                                                        </form>
-                                                    </div>
-                                                </li>
-                                             @endforeach
-                                        </ul>
+                                     <div class="py-3">
+                                        <h5 class="font-semibold text-gray-600 dark:text-gray-400 mb-2">Semester {{ $semester }}</h5>
+                                        <div class="space-y-2">
+                                            @foreach($semesterCourses as $course)
+                                            <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-700/50 p-3 rounded-md">
+                                                <p class="text-sm font-medium text-gray-900 dark:text-gray-200">{{ $course->name }}</p>
+                                                <div class="flex items-center space-x-4">
+                                                    <a href="{{ route('admin.courses.edit', $course) }}" class="text-sm font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                                    <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="text-sm font-medium text-red-600 dark:text-red-500 hover:underline">Remove</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </div>
                                      </div>
                                 @endforeach
                             </div>
