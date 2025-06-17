@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\AcademicProgramController;
+use App\Http\Middleware\RedirectIfAdmin;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,55 +26,21 @@ use App\Http\Controllers\LanguageController;
 // Welcome page
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware(RedirectIfAdmin::class);
 
-// Regular User Dashboard
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-
-    // Redirect admins away from the user dashboard
-    if ($user && $user->isAdmin()) {
-        return redirect()->route('admin.dashboard');
-    }
-
-    // Eager load the books for the authenticated user
-    $savedBooks = $user->books()->latest()->get();
-
-    return view('dashboard', compact('savedBooks'));
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// User Profile Routes
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
+// Authentication routes (login, register, etc.)
 require __DIR__ . '/auth.php';
 
+// --- USER ROUTES ---
+// All routes in this group are for authenticated, non-admin users.
+Route::middleware(['auth', 'verified', 'user'])->group(function () {
+    // Regular User Dashboard
+    Route::get('/dashboard', function () {
+        $savedBooks = auth()->user()->books()->latest()->get();
+        return view('dashboard', compact('savedBooks'));
+    })->name('dashboard');
 
-// --- ADMIN ROUTES ---
-// All routes in this group are protected by the 'auth' and 'admin' middleware.
-// They are also prefixed with '/admin' in the URL and 'admin.' in the route name.
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-
-    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::resource('library', LibraryController::class);
-
-    // Academic Program Management Routes
-    Route::resource('programs', ProgramController::class);
-    Route::post('programs/{program}/courses', [ProgramController::class, 'storeCourse'])->name('programs.courses.store');
-
-    // NEW: Course Management Routes
-    Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
-    Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
-    Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
-});
-
-Route::middleware('auth')->group(function () {
+    // User Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -82,15 +50,28 @@ Route::middleware('auth')->group(function () {
     Route::post('/library/{book}/save', [BookController::class, 'save'])->name('library.save');
     Route::delete('/library/{book}/unsave', [BookController::class, 'unsave'])->name('library.unsave');
 
-     // User-facing Academic Program Routes
-    Route::get('/academic-programs', [\App\Http\Controllers\AcademicProgramController::class, 'index'])->name('programs.index');
-    Route::get('/academic-programs/{program}', [\App\Http\Controllers\AcademicProgramController::class, 'show'])->name('programs.show');
+    // User-facing Academic Program Routes
+    Route::get('/academic-programs', [AcademicProgramController::class, 'index'])->name('programs.index');
+    Route::get('/academic-programs/{program}', [AcademicProgramController::class, 'show'])->name('programs.show');
 });
 
 
-Route::get('/api/books', [App\Http\Controllers\BookController::class, 'apiIndex'])->name('api.books.index');
-Route::get('/api/book-types', [App\Http\Controllers\BookController::class, 'getBookTypes'])->name('api.books.types');
+// --- ADMIN ROUTES ---
+// All routes in this group are for authenticated administrators only.
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::resource('library', LibraryController::class);
+    Route::resource('programs', ProgramController::class);
+    Route::post('programs/{program}/courses', [ProgramController::class, 'storeCourse'])->name('programs.courses.store');
+    Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
+    Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+    Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+});
 
 
-// Add this route
+// --- API AND OTHER GLOBAL ROUTES ---
+Route::get('/api/books', [BookController::class, 'apiIndex'])->name('api.books.index');
+Route::get('/api/book-types', [BookController::class, 'getBookTypes'])->name('api.books.types');
 Route::get('language/{locale}', [LanguageController::class, 'switch'])->name('language.switch');
