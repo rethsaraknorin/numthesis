@@ -17,8 +17,8 @@
             {{ __('Dashboard') }}
         </x-nav-link>
 
-        {{-- Academic Program Link --}}
-        <x-nav-link href="#" :active="request()->routeIs('user.academics.*')">
+        {{-- Academic Program Link (UPDATED) --}}
+        <x-nav-link :href="route('programs.index')" :active="request()->routeIs('programs.*')">
             {{ __('Academic Program') }}
         </x-nav-link>
 
