@@ -1,4 +1,5 @@
 import './bootstrap';
+import './theme'; // This line is crucial
 
 import Alpine from 'alpinejs';
 
