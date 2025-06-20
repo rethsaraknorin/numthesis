@@ -16,7 +16,6 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if the user is authenticated and if they are an admin
         if (Auth::check() && Auth::user()->isAdmin()) {
             // If they are an admin, redirect them away from the user page
             return redirect()->route('admin.dashboard');

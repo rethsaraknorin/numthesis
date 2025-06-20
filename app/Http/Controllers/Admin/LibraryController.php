@@ -23,7 +23,9 @@ class LibraryController extends Controller
      */
     public function create()
     {
-        return view('admin.library.create');
+        // Get all unique book types to populate the dropdown
+        $bookTypes = $this->getAllBookTypes();
+        return view('admin.library.create', compact('bookTypes'));
     }
 
     /**
@@ -38,27 +40,17 @@ class LibraryController extends Controller
             'publication_year' => ['required', 'integer', 'min:1800', 'max:' . date('Y')],
             'description' => ['nullable', 'string'],
             'book_link' => ['nullable', 'url', 'max:255'],
-            'picture' => ['nullable', 'image', 'max:2048'], // Max 2MB
-            'book_types' => ['nullable', 'string'], // Validate the incoming book types
+            'picture' => ['nullable', 'image', 'max:2048'],
+            'book_types' => ['nullable', 'array'], // Validate as an array
+            'book_types.*' => ['string', 'max:255'], // Validate each item in the array
         ]);
 
-        // Handle file upload
         if ($request->hasFile('picture')) {
             $path = $request->file('picture')->store('books', 'public');
             $validated['picture'] = $path;
         }
 
-        // --- MODIFICATION START ---
-        // Process the comma-separated string into a clean array
-        if (!empty($validated['book_types'])) {
-            // Explode the string by comma, trim whitespace from each item, and remove any empty items
-            $validated['book_types'] = array_filter(array_map('trim', explode(',', $validated['book_types'])));
-        } else {
-            // If the field is empty or null, store an empty array
-            $validated['book_types'] = [];
-        }
-        // --- MODIFICATION END ---
-
+        // The Book model will automatically cast the array to JSON
         Book::create($validated);
 
         return redirect()
@@ -71,7 +63,9 @@ class LibraryController extends Controller
      */
     public function edit(Book $library)
     {
-        return view('admin.library.edit', ['book' => $library]);
+        // Get all unique book types to populate the dropdown
+        $bookTypes = $this->getAllBookTypes();
+        return view('admin.library.edit', ['book' => $library, 'bookTypes' => $bookTypes]);
     }
 
     /**
@@ -86,13 +80,12 @@ class LibraryController extends Controller
             'publication_year' => ['required', 'integer', 'min:1800', 'max:' . date('Y')],
             'description' => ['nullable', 'string'],
             'book_link' => ['nullable', 'url', 'max:255'],
-            'picture' => ['nullable', 'image', 'max:2048'], // Max 2MB
-            'book_types' => ['nullable', 'string'], // Validate the incoming book types
+            'picture' => ['nullable', 'image', 'max:2048'],
+            'book_types' => ['nullable', 'array'], // Validate as an array
+            'book_types.*' => ['string', 'max:255'], // Validate each item in the array
         ]);
 
-        // Handle file upload
         if ($request->hasFile('picture')) {
-            // Delete old picture if exists
             if ($library->picture) {
                 Storage::disk('public')->delete($library->picture);
             }
@@ -100,16 +93,8 @@ class LibraryController extends Controller
             $validated['picture'] = $path;
         }
 
-        // --- MODIFICATION START ---
-        // Process the comma-separated string into a clean array
-        if (!empty($validated['book_types'])) {
-            // Explode the string by comma, trim whitespace from each item, and remove any empty items
-            $validated['book_types'] = array_filter(array_map('trim', explode(',', $validated['book_types'])));
-        } else {
-            // If the field is empty or null, store an empty array
-            $validated['book_types'] = [];
-        }
-        // --- MODIFICATION END ---
+        // If 'book_types' is not present, set it to an empty array to clear existing types
+        $validated['book_types'] = $request->input('book_types', []);
 
         $library->update($validated);
 
@@ -123,15 +108,29 @@ class LibraryController extends Controller
      */
     public function destroy(Book $library)
     {
-        // Delete the book's picture if it exists
         if ($library->picture) {
             Storage::disk('public')->delete($library->picture);
         }
-
         $library->delete();
 
         return redirect()
             ->route('admin.library.index')
             ->with('success', 'Book deleted successfully.');
+    }
+
+    /**
+     * Helper function to get all unique book types from the database.
+     */
+    private function getAllBookTypes(): array
+    {
+        $allTypesArrays = Book::whereNotNull('book_types')->pluck('book_types');
+
+        return $allTypesArrays
+            ->flatMap(fn ($types) => $types ?? [])
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
     }
 }

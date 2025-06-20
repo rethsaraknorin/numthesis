@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome - National University of Management</title>
     
+    {{-- UPDATED: Added favicon link --}}
+    <link rel="icon" href="{{ asset('assets/logo/num-logo.png') }}">
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -97,12 +100,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white">
-        <div class="container mx-auto px-6 py-8 text-center">
-            <p>&copy; 2024 National University of Management. All Rights Reserved.</p>
-            <p class="text-gray-400 text-sm mt-2">St. 96 Christopher Howes, Phnom Penh, Cambodia</p>
-        </div>
-    </footer>
+    <x-footer />
     
     {{-- FIXED: Restored the script for animations --}}
     <script>

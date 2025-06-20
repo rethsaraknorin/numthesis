@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 
 class BookController extends Controller
 {
@@ -16,20 +17,24 @@ class BookController extends Controller
      */
     public function index(): View
     {
-        return view('library.index');
+        // Get all unique book types to pass to the initial view for the filter dropdown.
+        $bookTypes = $this->getAllBookTypes();
+        return view('user.library.index', compact('bookTypes'));
     }
 
     /**
-     * Handle the API request for books, with filtering and searching.
+     * Handle the API request for books, now grouped by type.
      */
     public function apiIndex(Request $request): JsonResponse
     {
         $query = Book::query();
 
+        // Eager load the 'users' relationship to check if the book is saved by the current user.
         $query->with(['users' => function ($query) {
             $query->where('user_id', Auth::id());
         }]);
 
+        // Handle search functionality
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where(function ($q) use ($searchTerm) {
@@ -37,40 +42,41 @@ class BookController extends Controller
                   ->orWhere('author', 'like', '%' . $searchTerm . '%');
             });
         }
+        
+        // Fetch all matching books without pagination
+        $books = $query->latest()->get();
 
+        // Group the books by their types
+        $groupedBooks = new Collection();
+
+        foreach ($books as $book) {
+            if (is_array($book->book_types)) {
+                foreach ($book->book_types as $type) {
+                    if (!$groupedBooks->has($type)) {
+                        $groupedBooks[$type] = new Collection();
+                    }
+                    $groupedBooks[$type]->push($book);
+                }
+            }
+        }
+        
+        // If a specific type is requested, filter the groups
         if ($request->filled('type')) {
-            $type = $request->input('type');
-            $query->whereJsonContains('book_types', $type);
+             $filteredType = $request->input('type');
+             $groupedBooks = $groupedBooks->filter(function ($books, $type) use ($filteredType) {
+                return $type === $filteredType;
+             });
         }
 
-        $books = $query->latest()->paginate(12)->withQueryString();
-
-        return response()->json($books);
+        return response()->json($groupedBooks);
     }
     
     /**
-     * NEW: Get all unique book types from the database for the filter dropdown.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * Get all unique book types from the database for the filter dropdown.
      */
     public function getBookTypes(): JsonResponse
     {
-        // Pluck the 'book_types' column, which contains JSON arrays
-        $allTypesArrays = Book::whereNotNull('book_types')->pluck('book_types');
-
-        // Flatten the array of arrays into a single collection, get unique values,
-        // filter out any null/empty values, sort them, and reset the keys.
-        $uniqueTypes = $allTypesArrays
-            ->flatMap(function ($types) {
-                // Since the data is stored as a JSON string, decode it into a PHP array
-                return json_decode($types, true) ?? [];
-            })
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values();
-
-        return response()->json($uniqueTypes);
+        return response()->json($this->getAllBookTypes());
     }
 
     /**
@@ -93,5 +99,21 @@ class BookController extends Controller
         $user->books()->detach($book->id);
 
         return back()->with('success', 'Book removed from your dashboard.');
+    }
+
+    /**
+     * Helper function to get all unique book types from the database.
+     */
+    private function getAllBookTypes(): array
+    {
+        $allTypesArrays = Book::whereNotNull('book_types')->pluck('book_types');
+
+        return $allTypesArrays
+            ->flatMap(fn ($types) => $types ?? [])
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
     }
 }

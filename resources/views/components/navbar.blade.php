@@ -5,8 +5,7 @@
     
     <!-- Left Side: Logo -->
     <a href="{{ url('/') }}" class="flex-shrink-0 flex items-center space-x-2">
-      <img src="{{ asset('images/logo.png') }}" 
-           onerror="this.onerror=null;this.src='https://placehold.co/100x100/ffffff/1a202c?text=NUM';"
+      <img src="{{ asset('assets/logo/num-logo.png') }}" 
            class="w-10 h-10 rounded-full object-cover border-2 border-white/30" 
            alt="NUM Logo" />
       <span class="font-bold text-lg hidden sm:inline">NUM</span>
@@ -14,7 +13,7 @@
 
     <!-- Center: Desktop Navigation Links -->
     <div class="hidden md:flex items-center space-x-6">
-        <a href="#home" class="text-sm font-medium hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">Home</a>
+        <a href="/" class="text-sm font-medium hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">Home</a>
         <div class="relative group">
             <button class="flex items-center space-x-1 text-sm font-medium hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">
                 <span>Academics</span>
@@ -22,8 +21,8 @@
             </button>
             <div class="absolute hidden group-hover:block pt-3 -ml-4 w-48 z-10">
                 <div class="bg-white/80 dark:bg-gray-900/70 backdrop-blur-xl border dark:border-white/10 rounded-[15px] shadow-2xl space-y-1 p-2">
-                    <a href="#faculties" class="block px-3 py-2 text-sm rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Faculties</a>
-                    <a href="#" class="block px-3 py-2 text-sm rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Library</a>
+                    <a href="/#faculties" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Faculties</a>
+                    <a href="{{ route('library.index') }}" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Library</a>
                 </div>
             </div>
         </div>
@@ -34,12 +33,13 @@
             </button>
             <div class="absolute hidden group-hover:block pt-3 -ml-4 w-48 z-10">
                 <div class="bg-white/80 dark:bg-gray-900/70 backdrop-blur-xl border dark:border-white/10 rounded-[15px] shadow-2xl space-y-1 p-2">
-                    <a href="#" class="block px-3 py-2 text-sm rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Our Story</a>
-                    <a href="#" class="block px-3 py-2 text-sm rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Careers</a>
+                    {{-- UPDATED: Point to the new 'Our Story' route --}}
+                    <a href="{{ route('about.our-story') }}" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Our Story</a>
+                    <a href="#" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">Careers</a>
                 </div>
             </div>
         </div>
-        <a href="#" class="text-sm font-medium hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">Contact Us</a>
+        <a href="{{ route('contact') }}" class="text-sm font-medium hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">Contact Us</a>
     </div>
 
     <!-- Right Side: Desktop Auth & Theme Links -->
@@ -69,7 +69,7 @@
     <div class="bg-gray-800/80 border border-white/10 rounded-[20px] p-6 shadow-2xl">
         <div class="flex items-center justify-between mb-8">
             <a href="{{ url('/') }}" class="flex-shrink-0">
-                <img src="{{ asset('images/logo.png') }}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/ffffff/1a202c?text=NUM';" class="w-10 h-10 rounded-full object-cover" alt="Logo" />
+                <img src="{{ asset('assets/logo/num-logo.png') }}" class="w-10 h-10 rounded-full object-cover" alt="Logo" />
             </a>
             <div class="flex items-center space-x-2">
                 <button @click="$store.theme.toggle()" class="p-2 rounded-full text-gray-300 hover:bg-white/10 focus:outline-none transition-colors">
@@ -82,10 +82,10 @@
             </div>
         </div>
         <nav class="flex flex-col space-y-4 text-center">
-            <a href="#home" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">Home</a>
-            <a href="#faculties" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">Faculties</a>
-            <a href="#" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">About Us</a>
-            <a href="#" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">Contact Us</a>
+            <a href="/" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">Home</a>
+            <a href="/#faculties" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">Faculties</a>
+            <a href="{{ route('about.our-story') }}" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">About Us</a>
+            <a href="{{ route('contact') }}" @click="mobileMenuOpen = false" class="text-lg font-medium text-gray-200 hover:text-cyan-300 py-2">Contact Us</a>
             <hr class="border-gray-700 my-4"/>
             <div class="flex flex-col space-y-4 pt-4">
                  @auth

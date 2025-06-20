@@ -8,7 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Admin</title>
+    {{-- UPDATED: Hardcoded the title to NUM --}}
+    <title>NUM - Admin</title>
+
+    <link rel="icon" href="{{ asset('assets/logo/num-logo.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -27,10 +30,9 @@
     <div x-data="{ sidebarOpen: true }" class="flex h-screen bg-gray-100 dark:bg-gray-900">
         <!-- Sidebar -->
         <aside
-            class="sidebar flex-shrink-0 w-64 bg-white dark:bg-gray-800 border-r dark:border-gray-700 md:block"
+            class="sidebar flex-shrink-0 w-72 bg-white dark:bg-gray-800 border-r dark:border-gray-700 md:block"
             :class="{ 'block': sidebarOpen, 'hidden': !sidebarOpen }"
         >
-            {{-- This includes the sidebar navigation from a separate file --}}
             @include('layouts.partials.admin-sidebar')
         </aside>
 
@@ -47,7 +49,7 @@
                 </div>
                  <!-- Top Right Navigation (User Profile Dropdown & Theme Toggle) -->
                  <div class="flex items-center space-x-4">
-                    <!-- NEW: Theme Toggle Button -->
+                    <!-- Theme Toggle Button -->
                     <button @click="toggleTheme" class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
                         <template x-if="!isDarkMode">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
@@ -61,8 +63,8 @@
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                                    <img class="h-8 w-8 rounded-full object-cover me-2" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                     <div>{{ Auth::user()->name }}</div>
-
                                     <div class="ms-1">
                                         <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -105,6 +107,8 @@
                 <!-- Page Content -->
                 {{ $slot }}
             </main>
+            
+            <x-footer />
         </div>
     </div>
     
@@ -129,7 +133,6 @@
         }
     </script>
     
-    {{-- ADDED: Chart.js for dashboard charts --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     @stack('scripts')
