@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\LibraryController;
-use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\LibraryController as AdminLibraryController;
+use App\Http\Controllers\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\LanguageController;
@@ -28,6 +28,10 @@ Route::get('/', function () {
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'store'])->name('contact.store');
 Route::get('/about/our-story', [PageController::class, 'ourStory'])->name('about.our-story');
+Route::get('/about/achievements', [PageController::class, 'achievements'])->name('about.achievements');
+Route::get('/library', [PageController::class, 'library'])->name('page.library');
+// NEW: Route for public programs page
+Route::get('/academic-programs', [PageController::class, 'programs'])->name('page.programs');
 
 
 // Authentication routes (login, register, etc.)
@@ -62,9 +66,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::resource('library', LibraryController::class);
-    Route::resource('programs', ProgramController::class);
-    Route::post('programs/{program}/courses', [ProgramController::class, 'storeCourse'])->name('programs.courses.store');
+    Route::resource('library', AdminLibraryController::class);
+    Route::resource('programs', AdminProgramController::class);
+    Route::post('programs/{program}/courses', [AdminProgramController::class, 'storeCourse'])->name('programs.courses.store');
     Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
     Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
     Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');

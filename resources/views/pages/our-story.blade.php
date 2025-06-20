@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Story - National University of Management</title>
+    <title>Our Story - IT Faculty - National University of Management</title>
     
     <link rel="icon" href="{{ asset('assets/logo/num-logo.png') }}">
 
@@ -28,85 +28,85 @@
     <main>
         <header class="hero-bg-about h-96 flex items-center justify-center text-white">
             <div class="text-center px-4">
-                <h1 class="text-5xl font-bold">Our Story</h1>
-                <p class="mt-4 text-xl text-gray-300">A Legacy of Excellence and Innovation in Education</p>
+                <h1 class="text-5xl font-bold">Our Faculty's Story</h1>
+                <p class="mt-4 text-xl text-gray-300">A Legacy of Excellence and Innovation in Technology</p>
             </div>
         </header>
 
-        <!-- Main Content Section -->
         <section class="py-20 bg-white dark:bg-gray-800">
             <div class="container mx-auto px-6 lg:px-8">
-                <!-- History Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">A Rich History</h2>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Our Journey in Technology</h2>
                         <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                            Founded in 1983, the National University of Management began as the Economics Science Institute (ESI). With the nation's transition to a market-driven economy in 1991, the ESI was renamed the National School of Management. In 2004, it was officially established as the National University of Management (NUM).
+                           The Faculty of Information Technology is a proud and dynamic part of the National University of Management (NUM). While the university was founded in 1983, our faculty represents the cutting-edge of its evolution, born from a spirit of innovation and a commitment to Cambodia's technological future.
                         </p>
                         <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                            For over four decades, NUM has been at the forefront of educating Cambodia's future leaders in business, technology, and governance, adapting and growing to meet the demands of a rapidly evolving global landscape.
+                           Our programs in Information Technology, Business IT, and Robotic Engineering were established to meet the growing demands of the digital age and Industry 4.0. We are dedicated to nurturing the next generation of tech leaders, developers, and innovators who will drive Cambodia's growth on the global stage.
                         </p>
                     </div>
                     <div>
-                        <img src="https://www.num.edu.kh/img/about/num-about.jpg" alt="NUM Campus" class="rounded-lg shadow-xl">
+                        <img src="{{ asset('assets/num-image.jpg') }}" alt="NUM Campus" class="rounded-lg shadow-xl" style="filter: brightness(85%);">
                     </div>
                 </div>
 
-                <!-- Mission & Vision Section -->
                 <div class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-lg">
                         <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">Our Mission</h3>
                         <p class="text-gray-600 dark:text-gray-300">
-                            To be a leading institution of higher learning in Cambodia, providing quality education, research, and community service with a focus on developing competent and socially responsible managers, economists, and entrepreneurs.
+                            To be a leading faculty in Cambodia, providing world-class education, research, and community service with a focus on developing competent and socially responsible technologists, innovators, and leaders for the digital economy.
                         </p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-lg">
                         <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">Our Vision</h3>
                         <p class="text-gray-600 dark:text-gray-300">
-                            To become a nationally and internationally recognized hub of academic excellence, fostering innovation and contributing to the sustainable development of Cambodia and the region.
+                            To become a nationally and internationally recognized hub of technological excellence, fostering innovation and contributing to the sustainable development of Cambodia and the region through technology.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Timeline Section -->
         <section class="py-20">
              <div class="container mx-auto px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Milestones</h2>
+                <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Milestones of NUM</h2>
                 <div class="relative">
-                    <!-- The vertical line -->
                     <div class="absolute left-1/2 w-0.5 h-full bg-indigo-300 dark:bg-gray-700 -translate-x-1/2"></div>
                     
-                    <!-- Timeline Items -->
                     <div class="space-y-16">
-                        <!-- Item 1 -->
                         <div class="relative flex items-center">
                             <div class="w-1/2 pr-8 text-right">
                                 <p class="font-bold text-indigo-600 dark:text-indigo-400">1983</p>
                                 <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Establishment</h4>
-                                <p class="text-gray-600 dark:text-gray-400">Founded as the Economics Science Institute (ESI).</p>
+                                <p class="text-gray-600 dark:text-gray-400">The university is founded as the Economic Institute.</p>
                             </div>
                             <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
-                        <!-- Item 2 -->
                         <div class="relative flex items-center">
                             <div class="w-1/2"></div>
                             <div class="w-1/2 pl-8">
-                                <p class="font-bold text-indigo-600 dark:text-indigo-400">1991</p>
-                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Rebranding</h4>
-                                <p class="text-gray-600 dark:text-gray-400">Renamed to the National School of Management.</p>
+                                <p class="font-bold text-indigo-600 dark:text-indigo-400">1998</p>
+                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Becoming NIM</h4>
+                                <p class="text-gray-600 dark:text-gray-400">The institution is renamed the National Institute of Management (NIM).</p>
                             </div>
                              <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
-                         <!-- Item 3 -->
-                        <div class="relative flex items-center">
+                         <div class="relative flex items-center">
                             <div class="w-1/2 pr-8 text-right">
                                 <p class="font-bold text-indigo-600 dark:text-indigo-400">2004</p>
                                 <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">University Status</h4>
-                                <p class="text-gray-600 dark:text-gray-400">Officially became the National University of Management.</p>
+                                <p class="text-gray-600 dark:text-gray-400">Officially becomes the National University of Management (NUM).</p>
                             </div>
                             <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
+                        </div>
+                        <div class="relative flex items-center">
+                            <div class="w-1/2"></div>
+                            <div class="w-1/2 pl-8">
+                                <p class="font-bold text-indigo-600 dark:text-indigo-400">2011 - Present</p>
+                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Focus on Technology</h4>
+                                <p class="text-gray-600 dark:text-gray-400">The Faculty of IT grows, launching programs for Industry 4.0 and establishing the International College.</p>
+                            </div>
+                             <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
                     </div>
                 </div>
