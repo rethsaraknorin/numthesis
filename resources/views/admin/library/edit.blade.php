@@ -70,20 +70,43 @@
                 <x-input-error class="mt-2" :messages="$errors->get('publication_year')" />
               </div>
               
-              <div class="md:col-span-2">
-                <x-input-label for="book_types" :value="__('Book Types (comma-separated)')" />
-                @php
-                  // Ensure book_types is an array before imploding
-                  $types_string = '';
-                  if (!empty($book->book_types)) {
-                      $types_array = is_array($book->book_types) ? $book->book_types : json_decode($book->book_types, true);
-                      $types_string = implode(', ', $types_array ?? []);
-                  }
-                @endphp
-                <x-text-input id="book_types" name="book_types" type="text" class="mt-1 block w-full"
-                  :value="old('book_types', $types_string)" placeholder="e.g. Fiction, Non-Fiction, Sci-Fi" />
-                <x-input-error class="mt-2" :messages="$errors->get('book_types')" />
+              {{-- UPDATED: Multi-select dropdown for Book Types --}}
+              <div class="md:col-span-2" x-data="multiSelect({ allOptions: {{ json_encode($bookTypes) }}, selectedOptions: {{ json_encode(old('book_types', $book->book_types ?? [])) }} })" @click.away="open = false">
+                  <x-input-label for="book_types" :value="__('Book Types')" />
+                  <template x-for="option in selectedOptions" :key="option">
+                      <input type="hidden" name="book_types[]" :value="option">
+                  </template>
+                  <div class="relative mt-1">
+                      <div class="w-full flex border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900">
+                          <div class="flex flex-wrap gap-2 p-2 flex-grow">
+                              <template x-for="option in selectedOptions" :key="option">
+                                  <span class="inline-flex items-center px-2 py-1 bg-indigo-100 text-indigo-800 text-sm font-medium rounded dark:bg-indigo-900 dark:text-indigo-300">
+                                      <span x-text="option"></span>
+                                      <button @click.prevent="deselect(option)" type="button" class="ms-1.5 flex-shrink-0 text-indigo-500 hover:text-indigo-700">
+                                          <svg class="h-3 w-3" stroke="currentColor" fill="none" viewBox="0 0 8 8"><path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7" /></svg>
+                                      </button>
+                                  </span>
+                              </template>
+                              <input x-ref="newOptionInput" x-model="newOption" @input="filterOptions" @focus="open = true" class="flex-grow bg-transparent border-0 focus:ring-0 p-1" placeholder="Add or select a type...">
+                          </div>
+                          <button @click.prevent="open = !open" type="button" class="flex-shrink-0 px-2">
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" /></svg>
+                          </button>
+                      </div>
+                      <div x-show="open" class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" x-cloak>
+                          <template x-for="option in filteredOptions" :key="option">
+                              <div @click="select(option)" class="cursor-pointer select-none relative py-2 ps-3 pe-9 text-gray-900 dark:text-gray-200 hover:bg-indigo-500 hover:text-white">
+                                  <span class="block truncate" x-text="option"></span>
+                              </div>
+                          </template>
+                           <div x-show="newOption && !allOptions.includes(newOption) && !selectedOptions.includes(newOption)" @click="addNew" class="cursor-pointer select-none relative py-2 ps-3 pe-9 text-gray-700 dark:text-gray-400 hover:bg-indigo-500 hover:text-white">
+                              Create "<span x-text="newOption"></span>"
+                          </div>
+                      </div>
+                  </div>
+                   <x-input-error class="mt-2" :messages="$errors->get('book_types')" />
               </div>
+
             </div>
 
             <div>
@@ -96,7 +119,7 @@
 
             <div class="flex items-center gap-4">
               <x-primary-button>{{ __('Update Book') }}</x-primary-button>
-              <a href="{{ route('admin.library.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
+              <a href="{{ route('admin.library.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:underline">
                 {{ __('Cancel') }}
               </a>
             </div>
@@ -105,4 +128,49 @@
       </div>
     </div>
   </div>
+  
+  <script>
+    function multiSelect(config) {
+      return {
+        allOptions: config.allOptions || [],
+        selectedOptions: config.selectedOptions || [],
+        newOption: '',
+        filteredOptions: [],
+        open: false,
+        init() {
+            this.filteredOptions = this.allOptions.filter(opt => !this.selectedOptions.includes(opt));
+        },
+        deselect(option) {
+            this.selectedOptions = this.selectedOptions.filter(item => item !== option);
+            this.filterOptions();
+        },
+        select(option) {
+            if (!this.isSelected(option)) {
+                this.selectedOptions.push(option);
+            }
+            this.newOption = '';
+            this.open = false;
+            this.filterOptions();
+        },
+        addNew() {
+            const newOpt = this.newOption.trim();
+            if (newOpt && !this.allOptions.includes(newOpt) && !this.selectedOptions.includes(newOpt)) {
+                this.allOptions.push(newOpt);
+                this.selectedOptions.push(newOpt);
+            }
+            this.newOption = '';
+            this.open = false;
+            this.filterOptions();
+        },
+        filterOptions() {
+            this.filteredOptions = this.allOptions.filter(option => {
+                return !this.selectedOptions.includes(option) && option.toLowerCase().includes(this.newOption.toLowerCase());
+            });
+        },
+        isSelected(option) {
+            return this.selectedOptions.includes(option);
+        }
+      }
+    }
+  </script>
 </x-admin-layout>

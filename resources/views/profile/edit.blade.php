@@ -1,4 +1,9 @@
-<x-app-layout>
+@php
+// Dynamically determine the layout component's alias based on the user's role.
+$layout = Auth::user()->isAdmin() ? 'admin-layout' : 'app-layout';
+@endphp
+
+<x-dynamic-component :component="$layout">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Profile') }}
@@ -26,4 +31,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-dynamic-component>

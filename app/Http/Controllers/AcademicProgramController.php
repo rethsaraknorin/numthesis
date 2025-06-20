@@ -14,7 +14,8 @@ class AcademicProgramController extends Controller
     public function index(): View
     {
         $programs = Program::all();
-        return view('programs.index', compact('programs'));
+        // UPDATED: Changed 'programs.index' to 'user.programs.index'
+        return view('user.programs.index', compact('programs'));
     }
 
     /**
@@ -22,10 +23,10 @@ class AcademicProgramController extends Controller
      */
     public function show(Program $program): View
     {
-        // Eager load the courses and group them by year, then by semester
         $program->load('courses');
         $coursesByYearAndSemester = $program->courses->groupBy(['year', 'semester']);
 
-        return view('programs.show', compact('program', 'coursesByYearAndSemester'));
+        // UPDATED: Changed 'programs.show' to 'user.programs.show'
+        return view('user.programs.show', compact('program', 'coursesByYearAndSemester'));
     }
 }

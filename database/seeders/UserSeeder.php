@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'phone' => '012345678',
             'role' => 'admin',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
         ]);
 
         // Create a regular user for testing
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             'email' => 'num@gmail.com',
             'phone' => '087654321',
             'role' => 'user',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
         ]);
     }
 }
