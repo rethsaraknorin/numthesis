@@ -14,15 +14,20 @@ class Program extends Model
         'name',
         'code',
         'description',
-        'price_per_year', // Add this line
-        'price_per_semester', // Add this line
+        'price_per_year',
+        'price_per_semester',
     ];
 
-    /**
-     * Get the courses for the academic program.
-     */
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class)->orderBy('year')->orderBy('semester');
+    }
+
+    /**
+     * Get all class sessions for the academic program.
+     */
+    public function classSessions(): HasMany
+    {
+        return $this->hasMany(ClassSession::class);
     }
 }

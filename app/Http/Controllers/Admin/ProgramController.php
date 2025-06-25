@@ -80,7 +80,9 @@ class ProgramController extends Controller
 
         $program->courses()->create($validated);
 
-        return back()->with('success', 'Course added successfully.');
+        return back()
+            ->with('success', 'Course added successfully.')
+            ->with('active_year', $validated['year']);
     }
 
     public function destroyCourse(Course $course)

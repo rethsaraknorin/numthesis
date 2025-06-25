@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
@@ -18,11 +19,16 @@ class Course extends Model
         'semester',
     ];
 
-    /**
-     * Get the program that the course belongs to.
-     */
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class);
+    }
+
+    /**
+     * Get all class sessions for this course.
+     */
+    public function classSessions(): HasMany
+    {
+        return $this->hasMany(ClassSession::class);
     }
 }
