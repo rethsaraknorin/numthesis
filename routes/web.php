@@ -72,6 +72,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
     Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
     Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+
+    // --- SCHEDULE MANAGEMENT ROUTES ---
+    Route::get('schedules', [\App\Http\Controllers\Admin\ScheduleController::class, 'index'])->name('schedules.index');
+    
+    // Specific routes with static words like "session" must come BEFORE general routes with wildcards.
+    Route::get('schedules/session/{session}/edit', [\App\Http\Controllers\Admin\ScheduleController::class, 'edit'])->name('schedules.edit');
+    Route::put('schedules/session/{session}', [\App\Http\Controllers\Admin\ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('schedules/session/{session}', [\App\Http\Controllers\Admin\ScheduleController::class, 'destroy'])->name('schedules.destroy');
+
+    // General wildcard routes come after.
+    Route::get('schedules/{program}', [\App\Http\Controllers\Admin\ScheduleController::class, 'selectYear'])->name('schedules.selectYear');
+    Route::get('schedules/{program}/{year}', [\App\Http\Controllers\Admin\ScheduleController::class, 'selectSemester'])->name('schedules.selectSemester');
+    Route::get('schedules/{program}/{year}/{semester}', [\App\Http\Controllers\Admin\ScheduleController::class, 'manageBySemester'])->name('schedules.manage');
+    Route::post('schedules/{program}/{year}/{semester}', [\App\Http\Controllers\Admin\ScheduleController::class, 'store'])->name('schedules.store');
 });
 
 
