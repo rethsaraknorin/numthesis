@@ -12,7 +12,10 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\AcademicProgramController;
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\RedirectIfAdmin;
-
+use App\Http\Controllers\UserDashboardController; 
+use App\Http\Controllers\Admin\ScheduleController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\UserScheduleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,10 +50,11 @@ Route::middleware('auth')->group(function () {
 
 // --- USER ROUTES ---
 Route::middleware(['auth', 'verified', 'user'])->prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        $savedBooks = auth()->user()->books()->latest()->get();
-        return view('dashboard', compact('savedBooks'));
-    })->name('dashboard');
+    // UPDATED: This route now points to our new controller
+    Route::get('/', [UserDashboardController::class, 'index'])->name('dashboard');
+
+    // NEW: Route for the student's personal schedule page
+    Route::get('/my-schedule', [UserScheduleController::class, 'index'])->name('schedule.my');
 
     Route::get('/library', [BookController::class, 'index'])->name('library.index');
     Route::post('/library/{book}/save', [BookController::class, 'save'])->name('library.save');
@@ -64,28 +68,41 @@ Route::middleware(['auth', 'verified', 'user'])->prefix('dashboard')->group(func
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    
+    // User Management Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/all', [UserController::class, 'allUsers'])->name('users.all');
+    Route::get('/users/requests', [UserController::class, 'requests'])->name('users.requests');
+    Route::get('/users/students', [UserController::class, 'students'])->name('users.students');
+    Route::post('/users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Library Routes
     Route::resource('library', AdminLibraryController::class);
+    
+    // Route for Key Dates Management
+    Route::resource('key-dates', \App\Http\Controllers\Admin\KeyDateController::class)->except(['show', 'create']);
+
+    // Program and Course Routes
     Route::resource('programs', AdminProgramController::class);
     Route::post('programs/{program}/courses', [AdminProgramController::class, 'storeCourse'])->name('programs.courses.store');
     Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
     Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
     Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
-    // --- SCHEDULE MANAGEMENT ROUTES ---
-    Route::get('schedules', [\App\Http\Controllers\Admin\ScheduleController::class, 'index'])->name('schedules.index');
+    // Notification Route (Specific routes first)
+    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllAsRead');
     
-    // Specific routes with static words like "session" must come BEFORE general routes with wildcards.
-    Route::get('schedules/session/{session}/edit', [\App\Http\Controllers\Admin\ScheduleController::class, 'edit'])->name('schedules.edit');
-    Route::put('schedules/session/{session}', [\App\Http\Controllers\Admin\ScheduleController::class, 'update'])->name('schedules.update');
-    Route::delete('schedules/session/{session}', [\App\Http\Controllers\Admin\ScheduleController::class, 'destroy'])->name('schedules.destroy');
-
-    // General wildcard routes come after.
-    Route::get('schedules/{program}', [\App\Http\Controllers\Admin\ScheduleController::class, 'selectYear'])->name('schedules.selectYear');
-    Route::get('schedules/{program}/{year}', [\App\Http\Controllers\Admin\ScheduleController::class, 'selectSemester'])->name('schedules.selectSemester');
-    Route::get('schedules/{program}/{year}/{semester}', [\App\Http\Controllers\Admin\ScheduleController::class, 'manageBySemester'])->name('schedules.manage');
-    Route::post('schedules/{program}/{year}/{semester}', [\App\Http\Controllers\Admin\ScheduleController::class, 'store'])->name('schedules.store');
+    // Schedule Routes
+    Route::get('schedules', [ScheduleController::class, 'index'])->name('schedules.index');
+    Route::get('schedules/{program}', [ScheduleController::class, 'selectYear'])->name('schedules.selectYear');
+    Route::get('schedules/{program}/{year}', [ScheduleController::class, 'selectSemester'])->name('schedules.selectSemester');
+    Route::get('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'manageBySemester'])->name('schedules.manage');
+    Route::post('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('schedules/session/{session}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
+    Route::put('schedules/session/{session}', [ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('schedules/session/{session}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 });
 
 

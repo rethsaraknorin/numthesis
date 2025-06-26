@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
+use App\Notifications\StudentVerificationRequest; // Add this import
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification; // Add this import
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -29,24 +32,32 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Fill user data except for photo
-        $user->fill($request->except('photo'));
+        // Check if the student_id is being submitted for the first time
+        $isFirstTimeSubmission = $request->filled('student_id') && is_null($user->student_id);
 
-        // Handle profile photo upload
-        if ($request->hasFile('photo')) {
-            // Delete old photo if it exists
-            if ($user->profile_photo_path) {
-                Storage::disk('public')->delete($user->profile_photo_path);
-            }
-            // Store new photo
-            $user->profile_photo_path = $request->file('photo')->store('profile-photos', 'public');
-        }
+        $user->fill($request->validated());
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+
+        // --- NEW: Send notification AFTER saving the user ---
+        if ($isFirstTimeSubmission) {
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new StudentVerificationRequest($user));
+        }
+
+        // The photo handling logic remains the same
+        if ($request->hasFile('photo')) {
+            if ($user->profile_photo_path) {
+                Storage::disk('public')->delete($user->profile_photo_path);
+            }
+            $user->profile_photo_path = $request->file('photo')->store('profile-photos', 'public');
+            $user->save(); // Save again after updating photo path
+        }
+
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -62,7 +73,6 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        // Delete photo if it exists
         if ($user->profile_photo_path) {
             Storage::disk('public')->delete($user->profile_photo_path);
         }

@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -22,9 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
+        'student_id',       // Add this line
+        'promotion_name',   // Add this line
+        'group_name',       // Add this line
+        'is_approved',      // Add this line
         'password',
         'role',
-        'profile_photo_path', // Added 'profile_photo_path'
+        'profile_photo_path',
     ];
 
     /**
@@ -61,18 +64,13 @@ class User extends Authenticatable
 
     /**
      * Get the URL to the user's profile photo.
-     *
-     * This is the corrected accessor method.
      */
     public function getProfilePhotoUrlAttribute()
     {
         if ($this->profile_photo_path) {
-            // This uses Laravel's asset() helper which is the most reliable
-            // way to generate a URL to a file in the public directory.
             return asset('storage/' . $this->profile_photo_path);
         }
 
-        // Default avatar if no photo is set
         return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=7F9CF5&background=EBF4FF';
     }
 
