@@ -8,7 +8,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        {{-- UPDATED: Hardcoded the title and added the favicon --}}
         <title>NUM-Dashboard</title>
         <link rel="icon" href="{{ asset('assets/logo/num-logo.png') }}">
 

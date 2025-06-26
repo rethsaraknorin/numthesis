@@ -30,5 +30,11 @@ class ProgramSeeder extends Seeder
             'code' => 'Robotic',
             'description' => 'Design, build, and program intelligent systems and automation.'
         ]);
+
+        Program::create([
+            'name' => 'Computer Science',
+            'code' => 'CS',
+            'description' => 'Explores the theoretical foundations of information and computation.'
+        ]);
     }
 }

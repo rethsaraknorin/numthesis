@@ -5,33 +5,36 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Book;
 use App\Models\Program;
+use App\Models\Course; // Add this import
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB; // Import DB facade
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     /**
      * Show the application admin dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        // Data for summary cards
-        $users = User::where('role', 'user')->get();
-        $books = Book::all();
-        $programs = Program::all();
-        $recentUsersCount = User::where('role', 'user')->where('created_at', '>=', Carbon::now()->subWeek())->count();
+        // --- DATA FOR 3-CARD LAYOUT ---
+        $totalUserCount = User::where('role', 'user')->count();
+        $totalPrograms = Program::count();
+        $totalBooks = Book::count();
+
+        // --- NEW: Secondary Stats for Cards ---
+        $pendingRequestCount = User::whereNotNull('student_id')->where('is_approved', false)->count();
+        $approvedStudentCount = User::where('is_approved', true)->count();
+        $totalCourses = Course::count();
         $recentBooksCount = Book::where('created_at', '>=', Carbon::now()->subWeek())->count();
-
-        // NEW: Data for "Recently Added" lists
-        $latestUsers = User::where('role', 'user')->latest()->take(5)->get();
+        
+        // --- Data for Widgets ---
         $latestBooks = Book::latest()->take(5)->get();
+        $recentPendingUsers = User::whereNotNull('student_id')->where('is_approved', false)->latest()->take(5)->get();
 
-        // NEW: Data for User Registration Chart
-        $usersPerDay = User::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
-            ->where('created_at', '>=', Carbon::now()->subDays(6)) // From 6 days ago to today
+        // Data for User Registration Chart
+        $usersPerDay = User::where('role', 'user')->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+            ->where('created_at', '>=', Carbon::now()->subDays(6))
             ->groupBy('date')
             ->orderBy('date', 'ASC')
             ->pluck('count', 'date');
@@ -45,13 +48,15 @@ class HomeController extends Controller
         }
 
         return view('admin.index', compact(
-            'users',
-            'books',
-            'programs',
-            'recentUsersCount',
-            'recentBooksCount',
-            'latestUsers',
+            'totalUserCount',
+            'totalPrograms',
+            'totalBooks',
+            'pendingRequestCount', // New data
+            'approvedStudentCount', // New data
+            'totalCourses', // New data
+            'recentBooksCount', // New data
             'latestBooks',
+            'recentPendingUsers',
             'chartLabels',
             'chartData'
         ));
