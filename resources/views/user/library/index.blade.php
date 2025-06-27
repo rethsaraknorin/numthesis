@@ -17,7 +17,6 @@
                 </div>
             @endif
 
-            <!-- Search and Filter Controls -->
             <div class="mb-8 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                     <div class="md:col-span-2">
@@ -115,7 +114,6 @@
                  </div>
             </template>
             
-            <!-- Book Detail Modal -->
             <div
                 x-show="isModalOpen"
                 x-transition:enter="ease-out duration-300"
