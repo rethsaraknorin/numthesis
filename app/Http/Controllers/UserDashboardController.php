@@ -19,12 +19,14 @@ class UserDashboardController extends Controller
     public function index(): View
     {
         $user = Auth::user();
+        $savedBooks = $user->books()->latest()->get();
 
         // Check if the user is an approved student
         if ($user && $user->is_approved) {
 
             // --- Logic for CURRENT, APPROVED STUDENTS ---
-            $todayName = Carbon::now()->format('l');
+            $now = Carbon::now();
+            $todayName = $now->format('l');
 
             // Fetch today's schedule for the user's specific group
             $todaysSchedule = ClassSession::where('promotion_name', $user->promotion_name)
@@ -33,10 +35,21 @@ class UserDashboardController extends Controller
                 ->with('course')
                 ->orderBy('start_time')
                 ->get();
+            
+            // Find the next class for today by filtering sessions that start after the current time
+            $nextClass = $todaysSchedule->first(function ($session) use ($now) {
+                return Carbon::parse($session->start_time)->isAfter($now);
+            });
+            
+            // Fetch upcoming key dates
+            $keyDates = KeyDate::where('date', '>=', now())->orderBy('date')->take(4)->get();
 
             return view('dashboard', [
                 'is_current_student' => true,
                 'todaysSchedule' => $todaysSchedule,
+                'nextClass' => $nextClass, // Pass the next class to the view
+                'savedBooks' => $savedBooks,
+                'keyDates' => $keyDates,
             ]);
 
         } else {
@@ -51,6 +64,7 @@ class UserDashboardController extends Controller
                 'keyDates' => $keyDates,
                 'programs' => $programs,
                 'featuredBooks' => $featuredBooks,
+                'savedBooks' => $savedBooks,
             ]);
         }
     }
