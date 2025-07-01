@@ -12,10 +12,10 @@ class TelegramUser extends Model
     protected $fillable = [
         'user_id',
         'telegram_id',
+        'language_preference',
         'last_login',
     ];
 
-    // RELATIONSHIP: TelegramUser belongs to a User
     public function user()
     {
         return $this->belongsTo(User::class);
