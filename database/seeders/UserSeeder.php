@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
 
         // Create a regular user for testing
         User::create([
-            'name' => 'NUM',
+            'name' => 'Num',
             'email' => 'num@gmail.com',
             'phone' => '087654321',
             'role' => 'user',

@@ -33,7 +33,7 @@
         </x-nav-link>
         
         {{-- Chatbot Link to Telegram --}}
-        <x-nav-link href="https://t.me/YOUR_BOT_USERNAME_HERE" target="_blank" :active="false">
+        <x-nav-link href="https://t.me/num_chatbot" target="_blank" :active="false">
             {{ __('Ask a Question (Chatbot)') }}
         </x-nav-link>
 

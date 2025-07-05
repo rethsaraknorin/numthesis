@@ -32,55 +32,45 @@ class PageController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Send email to the specified address
         Mail::to('sawen0254@gmail.com')->send(new ContactFormSubmitted($validated));
 
         return back()->with('success', 'Thank you for your message! We will get back to you soon.');
     }
 
-    /**
-     * Display the our story page.
-     */
     public function ourStory(): View
     {
         return view('pages.our-story');
     }
 
-    /**
-     * Display the achievements page.
-     */
     public function achievements(): View
     {
         return view('pages.achievements');
     }
+    
+    public function ourProfessors(): View
+    {
+        return view('pages.our-professors');
+    }
 
-    /**
-     * Display the public library page.
-     */
     public function library(Request $request): View
     {
-        // Get all unique book types for the filter dropdown
         $bookTypes = Book::whereNotNull('book_types')->pluck('book_types')->flatten()->unique()->sort()->values()->all();
         
         $query = Book::query();
 
-        // Handle search functionality
         if ($request->filled('search')) {
             $searchTerm = $request->input('search');
             $query->where('title', 'like', "%{$searchTerm}%")
                   ->orWhere('author', 'like', "%{$searchTerm}%");
         }
 
-        // Handle filter by type
         if ($request->filled('type')) {
             $type = $request->input('type');
             $query->whereJsonContains('book_types', $type);
         }
         
-        // Fetch all matching books without pagination first
         $books = $query->latest()->get();
         
-        // Group the books by their types
         $groupedBooks = new Collection();
         foreach ($books as $book) {
             foreach ((array)$book->book_types as $type) {
@@ -94,9 +84,6 @@ class PageController extends Controller
         return view('pages.library', compact('groupedBooks', 'bookTypes'));
     }
 
-    /**
-     * NEW: Display the public programs page.
-     */
     public function programs(): View
     {
         $programs = Program::all();

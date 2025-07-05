@@ -35,23 +35,30 @@
 
         <section class="py-20 bg-white dark:bg-gray-800">
             <div class="container mx-auto px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+                {{-- UPDATED: Changed from a multi-column grid to a single-column layout --}}
+                <div class="space-y-8 max-w-4xl mx-auto">
                     @foreach ($programs as $program)
-                        <div class="bg-white dark:bg-gray-800/50 border border-transparent dark:border-gray-700/50 rounded-xl shadow-lg flex flex-col transition-shadow duration-300 hover:shadow-2xl">
+                        {{-- UPDATED: Card now uses a flexbox layout for a single row appearance --}}
+                        <div class="bg-white dark:bg-gray-800/50 border border-transparent dark:border-gray-700/50 rounded-xl shadow-lg flex flex-col md:flex-row items-center transition-shadow duration-300 hover:shadow-2xl">
                             <div class="p-8">
                                 <div class="mb-5">
                                     @if($program->code === 'IT')
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-cyan-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
                                     @elseif($program->code === 'BIT')
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                                    @elseif($program->code === 'CS')
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                                     @else
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                                     @endif
                                 </div>
-                                <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $program->name }} ({{$program->code}})</h3>
-                                <p class="font-normal text-gray-600 dark:text-gray-400 mb-4 h-24">{{ $program->description }}</p>
                             </div>
-                            <div class="mt-auto bg-gray-50 dark:bg-gray-900/50 p-6 rounded-b-xl">
+                            <div class="p-6 flex-grow">
+                                <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $program->name }} ({{$program->code}})</h3>
+                                <p class="font-normal text-gray-600 dark:text-gray-400">{{ $program->description }}</p>
+                            </div>
+                            <div class="p-6 md:border-l md:dark:border-gray-700 text-center">
                                 @if($program->price_per_year)
                                     <div class="text-sm text-gray-800 dark:text-gray-200 mb-4">
                                         <span class="font-semibold">Starting from:</span> 
@@ -66,6 +73,7 @@
                         </div>
                     @endforeach
                 </div>
+
             </div>
         </section>
     </main>
