@@ -32,6 +32,7 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'store'])->name('contact.store');
 Route::get('/about/our-story', [PageController::class, 'ourStory'])->name('about.our-story');
 Route::get('/about/achievements', [PageController::class, 'achievements'])->name('about.achievements');
+Route::get('/about/our-professors', [PageController::class, 'ourProfessors'])->name('about.our-professors'); // <-- ADD THIS LINE
 Route::get('/library', [PageController::class, 'library'])->name('page.library');
 // NEW: Route for public programs page
 Route::get('/academic-programs', [PageController::class, 'programs'])->name('page.programs');

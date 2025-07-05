@@ -101,8 +101,8 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-4">Have Questions?</h3>
                     <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">Our AI assistant can help with questions about enrollment, courses, and fees.</p>
-                    <a href="#" class="inline-block mt-4 px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white font-bold rounded-lg transition duration-300">
-                        Chat Now (Coming Soon)
+                    <a href="https://t.me/num_chatbot" target="_blank" class="inline-block mt-4 px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white font-bold rounded-lg transition duration-300">
+                        Chat with our AI
                     </a>
                 </div>
             </div>
