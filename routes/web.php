@@ -82,14 +82,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('library', AdminLibraryController::class);
     
     // Route for Key Dates Management
-    Route::resource('key-dates', \App\Http\Controllers\Admin\KeyDateController::class)->except(['show', 'create']);
-
+    Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
     // Program and Course Routes
     Route::resource('programs', AdminProgramController::class);
-    Route::post('programs/{program}/courses', [AdminProgramController::class, 'storeCourse'])->name('programs.courses.store');
-    Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
-    Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
-    Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
+    
+    // UPDATED: Add the new inline store route before the resource route
+    Route::post('courses/inline-store', [CourseController::class, 'inlineStore'])->name('courses.inlineStore');
+    Route::resource('courses', CourseController::class);
 
     // Notification Route (Specific routes first)
     Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');

@@ -43,7 +43,6 @@
                                         <td class="px-6 py-4 text-center">{{ $program->courses_count }}</td>
                                         <td class="px-6 py-4 text-center">
                                             <div class="flex justify-center items-center space-x-3">
-                                                <a href="{{ route('admin.programs.show', $program) }}" class="font-medium text-green-600 dark:text-green-500 hover:underline">Manage</a>
                                                 <a href="{{ route('admin.programs.edit', $program) }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                                 <form action="{{ route('admin.programs.destroy', $program) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this program? This will also delete all of its courses.');" class="inline">
                                                     @csrf

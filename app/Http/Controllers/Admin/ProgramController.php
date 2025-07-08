@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Program;
-use App\Models\Course;
 use Illuminate\Http\Request;
 
 class ProgramController extends Controller
@@ -22,7 +21,6 @@ class ProgramController extends Controller
 
     public function store(Request $request)
     {
-        // UPDATED: Added validation for price fields
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:20|unique:programs,code',
@@ -49,7 +47,6 @@ class ProgramController extends Controller
 
     public function update(Request $request, Program $program)
     {
-        // UPDATED: Added validation for price fields
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:20|unique:programs,code,' . $program->id,
@@ -67,27 +64,5 @@ class ProgramController extends Controller
     {
         $program->delete();
         return redirect()->route('admin.programs.index')->with('success', 'Academic program deleted successfully.');
-    }
-
-    public function storeCourse(Request $request, Program $program)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'year' => 'required|integer|min:1|max:4',
-            'semester' => 'required|integer|min:1|max:2',
-        ]);
-
-        $program->courses()->create($validated);
-
-        return back()
-            ->with('success', 'Course added successfully.')
-            ->with('active_year', $validated['year']);
-    }
-
-    public function destroyCourse(Course $course)
-    {
-        $course->delete();
-        return back()->with('success', 'Course deleted successfully.');
     }
 }

@@ -21,10 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
-        'student_id',       // Add this line
-        'promotion_name',   // Add this line
-        'group_name',       // Add this line
-        'is_approved',      // Add this line
+        'student_id',      
+        'promotion_name',  
+        'group_name',      
+        'is_approved',     
         'password',
         'role',
         'profile_photo_path',
