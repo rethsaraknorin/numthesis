@@ -17,6 +17,8 @@ class Course extends Model
         'description',
         'year',
         'semester',
+        'credits',
+        'hours',
     ];
 
     public function program(): BelongsTo

@@ -19,31 +19,31 @@ class ClassSession extends Model
         'program_id',
         'course_id',
         'year',
-        'semester',       // Add this line
+        'semester',
         'promotion_name',
-        'group_name',
+        'group_name',    
         'day_of_week',
-        'shift',
         'start_time',
         'end_time',
         'lecturer_name',
-        'lecturer_phone',
         'room_number',
+        'shift',        
+        'lecturer_phone', // ADDED
     ];
 
     /**
-     * Get the program this class session belongs to.
-     */
-    public function program(): BelongsTo
-    {
-        return $this->belongsTo(Program::class);
-    }
-
-    /**
-     * Get the course being taught in this session.
+     * Get the course that this session belongs to.
      */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    /**
+     * Get the program that this session belongs to.
+     */
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class);
     }
 }

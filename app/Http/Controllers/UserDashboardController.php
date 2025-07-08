@@ -1,71 +1,40 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 use App\Models\ClassSession;
-use App\Models\KeyDate;
-use App\Models\Program;
 use App\Models\Book;
+use App\Models\Program;
+use App\Models\Event;
 use Carbon\Carbon;
-
 class UserDashboardController extends Controller
 {
-    /**
-     * Display the appropriate dashboard based on user's approval status.
-     */
-    public function index(): View
+    public function index()
     {
         $user = Auth::user();
-        $savedBooks = $user->books()->latest()->get();
-
-        // Check if the user is an approved student
-        if ($user && $user->is_approved) {
-
-            // --- Logic for CURRENT, APPROVED STUDENTS ---
-            $now = Carbon::now();
-            $todayName = $now->format('l');
-
-            // Fetch today's schedule for the user's specific group
-            $todaysSchedule = ClassSession::where('promotion_name', $user->promotion_name)
+        $latestEvents = Event::latest()->take(3)->get();
+        if ($user->is_approved) {
+            $today = strtolower(Carbon::now()->format('l'));
+            // CORRECTED: Use promotion_name and group_name to query
+            $dailySchedule = ClassSession::where('promotion_name', $user->promotion_name)
                 ->where('group_name', $user->group_name)
-                ->where('day_of_week', $todayName)
-                ->with('course')
+                ->where('day_of_week', $today)
                 ->orderBy('start_time')
                 ->get();
-            
-            // Find the next class for today by filtering sessions that start after the current time
-            $nextClass = $todaysSchedule->first(function ($session) use ($now) {
-                return Carbon::parse($session->start_time)->isAfter($now);
-            });
-            
-            // Fetch upcoming key dates
-            $keyDates = KeyDate::where('date', '>=', now())->orderBy('date')->take(4)->get();
-
-            return view('dashboard', [
-                'is_current_student' => true,
-                'todaysSchedule' => $todaysSchedule,
-                'nextClass' => $nextClass, // Pass the next class to the view
-                'savedBooks' => $savedBooks,
-                'keyDates' => $keyDates,
-            ]);
-
+            $now = Carbon::now()->format('H:i:s');
+            // CORRECTED: Use promotion_name and group_name to query
+            $nextClass = ClassSession::where('promotion_name', $user->promotion_name)
+                ->where('group_name', $user->group_name)
+                ->where('day_of_week', $today)
+                ->where('start_time', '>', $now)
+                ->orderBy('start_time')
+                ->first();
+            $savedBooks = $user->books()->latest()->take(5)->get();
+            return view('dashboard.partials.student-dashboard', compact('dailySchedule', 'nextClass', 'savedBooks', 'latestEvents'));
         } else {
-
-            // --- Logic for PROSPECTIVE / UNAPPROVED STUDENTS ---
-            $keyDates = KeyDate::where('date', '>=', now())->orderBy('date')->take(4)->get();
-            $programs = Program::all();
-            $featuredBooks = Book::latest()->take(4)->get();
-
-            return view('dashboard', [
-                'is_current_student' => false,
-                'keyDates' => $keyDates,
-                'programs' => $programs,
-                'featuredBooks' => $featuredBooks,
-                'savedBooks' => $savedBooks,
-            ]);
+            $featuredPrograms = Program::take(3)->get();
+            $featuredBooks = Book::inRandomOrder()->take(5)->get();
+            return view('dashboard.partials.normal-dashboard', compact('featuredPrograms', 'featuredBooks', 'latestEvents'));
         }
     }
 }

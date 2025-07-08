@@ -16,24 +16,39 @@
         @csrf
         @method('patch')
 
-        {{-- Profile Photo, Name, and Email fields remain the same --}}
-        <div x-data="{photoName: null, photoPreview: null}" class="col-span-6 sm:col-span-4">
-            <input type="file" id="photo" class="hidden" x-ref="photo" x-on:change=" photoName = $refs.photo.files[0].name; const reader = new FileReader(); reader.onload = (e) => { photoPreview = e.target.result; }; reader.readAsDataURL($refs.photo.files[0]);" name="photo" />
+        {{-- UPDATED: Profile Photo Section --}}
+        <div>
             <x-input-label for="photo" :value="__('Photo')" />
-            <div class="mt-2" x-show="! photoPreview">
-                <img src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" class="rounded-full h-20 w-20 object-cover">
+            <div class="mt-2 flex items-center">
+                <div class="relative group">
+                    {{-- Display existing photo or initials --}}
+                    <img id="photo-preview" class="rounded-full h-20 w-20 object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}">
+                    
+                    {{-- Hover overlay with camera icon --}}
+                    <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                        <label for="photo" class="cursor-pointer text-white">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </label>
+                    </div>
+                </div>
+                {{-- Hidden file input --}}
+                <input type="file" name="photo" id="photo" class="hidden" onchange="previewPhoto(event)">
             </div>
-            <div class="mt-2" x-show="photoPreview" style="display: none;">
-                <span class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center" x-bind:style="'background-image: url(\'' + photoPreview + '\');'"></span>
-            </div>
-            <x-secondary-button class="mt-2 me-2" type="button" x-on:click.prevent="$refs.photo.click()">{{ __('Select A New Photo') }}</x-secondary-button>
-            <x-input-error :messages="$errors->get('photo')" class="mt-2" />
+             <x-input-error :messages="$errors->get('photo')" class="mt-2" />
         </div>
+
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" />
         </div>
+
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
@@ -45,18 +60,19 @@
                         <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">{{ __('Click here to re-send the verification email.') }}</button>
                     </p>
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">{{ __('Saved.') }}</p>
+                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">{{ __('A new verification link has been sent to your email address.') }}</p>
                     @endif
                 </div>
             @endif
         </div>
+
         <div class="mt-4">
             <x-input-label for="phone" :value="__('Phone Number')" />
             <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full" :value="old('phone', $user->phone)" autocomplete="tel" />
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
-        {{-- UPDATED: Added a check to hide this section for admins --}}
+        {{-- Student Verification Section (Unchanged) --}}
         @if(!Auth::user()->isAdmin())
             <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
                 <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Student Verification</h3>
@@ -90,4 +106,16 @@
             @endif
         </div>
     </form>
+
+    {{-- Script to handle live photo preview --}}
+    <script>
+        function previewPhoto(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('photo-preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </section>
