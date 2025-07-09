@@ -21,6 +21,11 @@ use App\Http\Controllers\UserScheduleController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
 */
 
 // Welcome page
@@ -88,14 +93,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 
-    // Schedule Routes
+    // Schedule Routes - FINAL VERSION
     Route::get('schedules', [ScheduleController::class, 'index'])->name('schedules.index');
     Route::get('schedules/{program}', [ScheduleController::class, 'selectYear'])->name('schedules.selectYear');
     Route::get('schedules/{program}/{year}', [ScheduleController::class, 'selectSemester'])->name('schedules.selectSemester');
-    Route::get('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'manageBySemester'])->name('schedules.manage');
-    Route::post('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'store'])->name('schedules.store');
 
-    // All these routes correctly use '{session}' for Route Model Binding
+    // This is now the main management page with tabs for groups
+    Route::get('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'manageBySemester'])->name('schedules.manage');
+    
+    Route::post('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'store'])->name('schedules.store');
+    
+    // Session-specific routes remain the same
     Route::get('schedules/session/{session}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
     Route::put('schedules/session/{session}', [ScheduleController::class, 'update'])->name('schedules.update');
     Route::delete('schedules/session/{session}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
