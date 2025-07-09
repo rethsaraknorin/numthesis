@@ -27,12 +27,13 @@ class ScheduleController extends Controller
         return view('admin.schedules.select-semester', compact('program', 'year'));
     }
 
-    public function manageBySemester(Program $program, $year, $semester)
+    public function manageBySemester(Request $request, Program $program, $year, $semester)
     {
         $sessions = ClassSession::where('program_id', $program->id)
             ->where('year', $year)
             ->where('semester', $semester)
             ->with('course')
+            ->orderBy('start_time')
             ->get();
             
         $courses = Course::where('program_id', $program->id)
@@ -40,39 +41,23 @@ class ScheduleController extends Controller
             ->where('semester', $semester)
             ->get();
 
-        $scheduleData = [];
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        $scheduleData = [];
+        
+        $promotions = $sessions->pluck('promotion_name')->unique()->sort();
+        $activePromotion = $request->query('promotion', $promotions->first());
 
-        $groupedByPromotion = $sessions->groupBy('promotion_name');
-
-        foreach($groupedByPromotion as $promotion => $promotionSessions) {
-            $groupedByGroup = $promotionSessions->groupBy('group_name');
-
-            foreach($groupedByGroup as $group => $groupSessions) {
-                $grid = [];
-                $labels = [];
-
+        if ($activePromotion) {
+            foreach ($sessions->where('promotion_name', $activePromotion)->groupBy('group_name') as $group => $groupSessions) {
                 foreach($groupSessions as $session) {
-                    $startTime = Carbon::parse($session->start_time)->format('H:i');
-                    $day = strtolower($session->day_of_week);
-
-                    $grid[$startTime][$day] = $session;
-
-                    if (!isset($labels[$startTime])) {
-                        $labels[$startTime] = Carbon::parse($session->start_time)->format('h:i A') . ' - ' . Carbon::parse($session->end_time)->format('h:i A');
-                    }
+                    $time = Carbon::parse($session->start_time)->format('h:i A') . ' - ' . Carbon::parse($session->end_time)->format('h:i A');
+                    $day = ucfirst(strtolower($session->day_of_week));
+                    $scheduleData[$activePromotion][$group][$time][$day][] = $session;
                 }
-                ksort($labels);
-                $scheduleData[$promotion][$group] = [
-                    'grid' => $grid,
-                    'labels' => $labels,
-                ];
             }
         }
-
-        $promotions = $sessions->pluck('promotion_name')->unique()->sort()->values();
-
-        return view('admin.schedules.manage', compact('program', 'year', 'semester', 'courses', 'scheduleData', 'promotions', 'days'));
+        
+        return view('admin.schedules.manage', compact('program', 'year', 'semester', 'courses', 'scheduleData', 'promotions', 'days', 'activePromotion'));
     }
 
     public function store(Request $request, Program $program, $year, $semester)
@@ -80,26 +65,28 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'lecturer_name' => 'required|string|max:255',
-            'lecturer_phone' => 'nullable|string|max:20', // ADDED
+            'lecturer_phone' => 'nullable|string|max:20',
             'room_number' => 'required|string|max:255',
             'day_of_week' => 'required|string',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'promotion_name' => 'required|string|max:255',
             'group_name' => 'required|string|max:255',
-            'shift' => 'nullable|string|max:255',
+            'shift' => 'required|string|in:Morning,Afternoon,Night',
         ]);
 
-        $validated['day_of_week'] = strtolower($validated['day_of_week']);
-
-        $session = ClassSession::create(array_merge($validated, [
+        ClassSession::create($validated + [
             'program_id' => $program->id,
             'year' => $year,
             'semester' => $semester,
-        ]));
+        ]);
 
-        // ** THE FIX: Return the new session as JSON for the frontend to handle **
-        return response()->json($session->load('course'));
+        return redirect()->route('admin.schedules.manage', [
+            'program' => $program->id, 
+            'year' => $year, 
+            'semester' => $semester,
+            'promotion' => $validated['promotion_name']
+        ])->with('success', 'Class session added successfully.');
     }
 
     public function edit(ClassSession $session)
@@ -111,8 +98,9 @@ class ScheduleController extends Controller
             ->get();
         
         $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+        $shifts = ['Morning', 'Afternoon', 'Night'];
             
-        return view('admin.schedules.edit', compact('session', 'courses', 'days'));
+        return view('admin.schedules.edit', compact('session', 'courses', 'days', 'shifts'));
     }
 
     public function update(Request $request, ClassSession $session)
@@ -120,30 +108,40 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'lecturer_name' => 'required|string|max:255',
-            'lecturer_phone' => 'nullable|string|max:20', // ADDED
+            'lecturer_phone' => 'nullable|string|max:20',
             'room_number' => 'required|string|max:255',
             'day_of_week' => 'required|string',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'promotion_name' => 'required|string|max:255',
             'group_name' => 'required|string|max:255',
-            'shift' => 'nullable|string|max:255',
+            'shift' => 'required|string|in:Morning,Afternoon,Night',
         ]);
-
-        $validated['day_of_week'] = strtolower($validated['day_of_week']);
 
         $session->update($validated);
 
         return redirect()->route('admin.schedules.manage', [
             'program' => $session->program_id, 
             'year' => $session->year, 
-            'semester' => $session->semester
+            'semester' => $session->semester,
+            'promotion' => $validated['promotion_name']
         ])->with('success', 'Class session updated successfully.');
     }
 
     public function destroy(ClassSession $session)
     {
+        $program_id = $session->program_id;
+        $year = $session->year;
+        $semester = $session->semester;
+        $promotion_name = $session->promotion_name;
+        
         $session->delete();
-        return back()->with('success', 'Class session deleted successfully.');
+
+        return redirect()->route('admin.schedules.manage', [
+            'program' => $program_id,
+            'year' => $year,
+            'semester' => $semester,
+            'promotion' => $promotion_name,
+        ])->with('success', 'Class session deleted successfully.');
     }
 }

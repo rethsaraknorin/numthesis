@@ -12,10 +12,11 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\AcademicProgramController;
 use App\Http\Controllers\PageController;
 use App\Http\Middleware\RedirectIfAdmin;
-use App\Http\Controllers\UserDashboardController; 
+use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\UserScheduleController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,9 +33,8 @@ Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'store'])->name('contact.store');
 Route::get('/about/our-story', [PageController::class, 'ourStory'])->name('about.our-story');
 Route::get('/about/achievements', [PageController::class, 'achievements'])->name('about.achievements');
-Route::get('/about/our-professors', [PageController::class, 'ourProfessors'])->name('about.our-professors'); // <-- ADD THIS LINE
+Route::get('/about/our-professors', [PageController::class, 'ourProfessors'])->name('about.our-professors');
 Route::get('/library', [PageController::class, 'library'])->name('page.library');
-// NEW: Route for public programs page
 Route::get('/academic-programs', [PageController::class, 'programs'])->name('page.programs');
 
 
@@ -51,16 +51,11 @@ Route::middleware('auth')->group(function () {
 
 // --- USER ROUTES ---
 Route::middleware(['auth', 'verified', 'user'])->prefix('dashboard')->group(function () {
-    // UPDATED: This route now points to our new controller
     Route::get('/', [UserDashboardController::class, 'index'])->name('dashboard');
-
-    // NEW: Route for the student's personal schedule page
     Route::get('/my-schedule', [UserScheduleController::class, 'index'])->name('schedule.my');
-
     Route::get('/library', [BookController::class, 'index'])->name('library.index');
     Route::post('/library/{book}/save', [BookController::class, 'save'])->name('library.save');
     Route::delete('/library/{book}/unsave', [BookController::class, 'unsave'])->name('library.unsave');
-
     Route::get('/academic-programs', [AcademicProgramController::class, 'index'])->name('programs.index');
     Route::get('/academic-programs/{program}', [AcademicProgramController::class, 'show'])->name('programs.show');
 });
@@ -69,7 +64,7 @@ Route::middleware(['auth', 'verified', 'user'])->prefix('dashboard')->group(func
 // --- ADMIN ROUTES ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
-    
+
     // User Management Routes
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/all', [UserController::class, 'allUsers'])->name('users.all');
@@ -80,26 +75,27 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Library Routes
     Route::resource('library', AdminLibraryController::class);
-    
-    // Route for Key Dates Management
+
+    // Event Routes
     Route::resource('events', \App\Http\Controllers\Admin\EventController::class);
+
     // Program and Course Routes
     Route::resource('programs', AdminProgramController::class);
-    
-    // UPDATED: Add the new inline store route before the resource route
     Route::post('courses/inline-store', [CourseController::class, 'inlineStore'])->name('courses.inlineStore');
     Route::resource('courses', CourseController::class);
 
-    // Notification Route (Specific routes first)
-    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('admin.notifications.markAsRead');
-    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('admin.notifications.markAllAsRead');
-    
+    // Notification Routes
+    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+
     // Schedule Routes
     Route::get('schedules', [ScheduleController::class, 'index'])->name('schedules.index');
     Route::get('schedules/{program}', [ScheduleController::class, 'selectYear'])->name('schedules.selectYear');
     Route::get('schedules/{program}/{year}', [ScheduleController::class, 'selectSemester'])->name('schedules.selectSemester');
     Route::get('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'manageBySemester'])->name('schedules.manage');
     Route::post('schedules/{program}/{year}/{semester}', [ScheduleController::class, 'store'])->name('schedules.store');
+
+    // All these routes correctly use '{session}' for Route Model Binding
     Route::get('schedules/session/{session}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
     Route::put('schedules/session/{session}', [ScheduleController::class, 'update'])->name('schedules.update');
     Route::delete('schedules/session/{session}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
