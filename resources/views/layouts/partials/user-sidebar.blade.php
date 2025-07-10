@@ -13,18 +13,21 @@
                 {{ __('Dashboard') }}
             </x-nav-link>
 
-            {{-- NEW: Conditional Link for Approved Students --}}
+            {{-- Conditional Link for Unapproved Users --}}
+            @if(Auth::user() && !Auth::user()->is_approved)
+            <x-nav-link :href="route('programs.index')" :active="request()->routeIs('programs.*')">
+                <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M12 18.375a9.375 9.375 0 100-18.75 9.375 9.375 0 000 18.75z" /><path d="M8.25 9.75h7.5v.008h-7.5V9.75z" /><path d="M12 14.25v.008" /><path d="M10.125 12h3.75" /><path d="M12 3.75v1.5" /><path d="M12 18.75v1.5" /><path d="M3.75 12h1.5" /><path d="M18.75 12h1.5" /><path d="M5.69 6.075l1.06-1.06" /><path d="M17.25 18.31l1.06-1.06" /><path d="M5.69 17.925l1.06 1.06" /><path d="M17.25 5.69l1.06 1.06" /></svg>
+                {{ __('Academic Program') }}
+            </x-nav-link>
+            @endif
+
+            {{-- Conditional Link for Approved Students --}}
             @if(Auth::user() && Auth::user()->is_approved)
             <x-nav-link :href="route('schedule.my')" :active="request()->routeIs('schedule.my')">
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" /></svg>
                 {{ __('My Schedule') }}
             </x-nav-link>
             @endif
-
-            <x-nav-link :href="route('programs.index')" :active="request()->routeIs('programs.*')">
-                <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path d="M12 18.375a9.375 9.375 0 100-18.75 9.375 9.375 0 000 18.75z" /><path d="M8.25 9.75h7.5v.008h-7.5V9.75z" /><path d="M12 14.25v.008" /><path d="M10.125 12h3.75" /><path d="M12 3.75v1.5" /><path d="M12 18.75v1.5" /><path d="M3.75 12h1.5" /><path d="M18.75 12h1.5" /><path d="M5.69 6.075l1.06-1.06" /><path d="M17.25 18.31l1.06-1.06" /><path d="M5.69 17.925l1.06 1.06" /><path d="M17.25 5.69l1.06 1.06" /></svg>
-                {{ __('Academic Program') }}
-            </x-nav-link>
 
             <x-nav-link :href="route('library.index')" :active="request()->routeIs('library.index')">
                 <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
