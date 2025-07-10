@@ -18,7 +18,7 @@
                     <div class="p-6 flex flex-col flex-grow">
                         <p class="text-sm font-semibold text-cyan-500">{{ \Carbon\Carbon::parse($event->date)->format('M d, Y') }}</p>
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2">{{ $event->title }}</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mt-2 line-clamp-3 flex-grow">{{ $event->description }}</p>
+                        <div class="text-gray-600 dark:text-gray-400 mt-2 line-clamp-3 flex-grow">{!! nl2br(e($event->description)) !!}</div>
                         
                         {{-- UPDATED: "See More" link to the event detail page --}}
                         <div class="mt-4">

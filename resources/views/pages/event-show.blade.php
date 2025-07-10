@@ -19,7 +19,6 @@
     </div>
 
     <main class="pt-24">
-        {{-- UPDATED: Redesigned Content Section to match the new style --}}
         <section class="py-12 md:py-20">
             <div class="container mx-auto px-6 lg:px-8 max-w-4xl">
                 
@@ -42,16 +41,15 @@
                     </div>
 
                     <div class="prose prose-lg dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
-                        {{-- Display the event image within the content if it exists --}}
                         @if($event->image_path)
                             <img src="{{ asset('storage/' . $event->image_path) }}" class="rounded-lg shadow-md mb-8" alt="{{ $event->title }}">
                         @endif
-                        <p>{{ $event->description }}</p>
+                        <p>{!! nl2br(e($event->description)) !!}</p>
                     </div>
                 </div>
 
                  <div class="mt-12 text-center">
-                    <a href="{{ route('welcome') }}#events" class="text-indigo-600 dark:text-indigo-400 hover:underline">&larr; Back to Homepage</a>
+                    <a href="javascript:history.back()" class="text-indigo-600 dark:text-indigo-400 hover:underline">&larr; Go Back</a>
                 </div>
             </div>
         </section>

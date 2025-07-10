@@ -4,7 +4,8 @@
         <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Latest Events & News</h4>
         <div class="space-y-5">
             @forelse($latestEvents as $event)
-                <div class="flex items-start space-x-4">
+                {{-- WRAP the entire div in an anchor tag --}}
+                <a href="{{ route('page.event.show', $event) }}" class="flex items-start space-x-4 group p-2 -m-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
                     @if($event->image_path)
                         <img src="{{ asset('storage/' . $event->image_path) }}" alt="{{ $event->title }}" class="h-20 w-20 object-cover rounded-lg flex-shrink-0">
                     @else
@@ -13,11 +14,13 @@
                         </div>
                     @endif
                     <div>
-                        <p class="font-semibold text-gray-800 dark:text-gray-200 leading-tight">{{ $event->title }}</p>
+                        {{-- ADD group-hover classes to the title for a visual cue --}}
+                        <p class="font-semibold text-gray-800 dark:text-gray-200 leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400">{{ $event->title }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ \Carbon\Carbon::parse($event->date)->format('F j, Y') }}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-500 mt-1 line-clamp-2">{{ $event->description }}</p>
+                        {{-- The description was already in the correct format, so no changes here --}}
+                        <div class="text-sm text-gray-600 dark:text-gray-500 mt-1 line-clamp-2">{!! nl2br(e($event->description)) !!}</div>
                     </div>
-                </div>
+                </a>
             @empty
                 <p class="text-gray-500 dark:text-gray-400">No recent events.</p>
             @endforelse
