@@ -4,7 +4,8 @@
         <div class="flex flex-col md:flex-row items-center gap-12">
             {{-- Rector's Image --}}
             <div class="md:w-1/3 text-center">
-                <img src="https://num.e-khmer.com/wp-content/uploads/2023/08/rector3.png" alt="Rector of NUM" class="w-64 h-64 mx-auto object-cover ring-4 ring-white/10">
+                {{-- UPDATED: Removed rounded-full and shadow-lg classes --}}
+                <img src="https://num.e-khmer.com/wp-content/uploads/2023/08/rector3.png" alt="Rector of NUM" class="w-64 h-64 mx-auto object-cover">
             </div>
             
             {{-- Rector's Message --}}

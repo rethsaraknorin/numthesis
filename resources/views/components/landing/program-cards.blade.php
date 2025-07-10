@@ -6,7 +6,7 @@
         <div class="w-24 h-1 bg-cyan-500 mx-auto mt-4"></div>
     </div>
 
-    <div class="space-y-8 max-w-4xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
         {{-- Card: Information Technology --}}
         <div class="program-card bg-white dark:bg-gray-800 rounded-xl shadow-lg flex items-center transform hover:-translate-y-1 transition-transform duration-300 fade-in-up">
             <div class="p-8">
@@ -19,9 +19,8 @@
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
                     {{ __('it_desc') }}
                 </p>
-            </div>
-            <div class="p-6">
-                <a href="{{ route('page.programs') }}" class="font-semibold text-cyan-600 hover:text-cyan-800 dark:text-cyan-400 dark:hover:text-cyan-200 transition duration-300">{{ __('learn_more') }} &rarr;</a>
+                 {{-- FINAL Link Update --}}
+                 <a href="{{ route('page.program.show', ['program' => 1]) }}" class="font-semibold text-cyan-600 hover:text-cyan-800 dark:text-cyan-400 dark:hover:text-cyan-200 transition duration-300 mt-4 inline-block">{{ __('learn_more') }} &rarr;</a>
             </div>
         </div>
 
@@ -37,10 +36,9 @@
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
                     {{ __('bit_desc') }}
                 </p>
+                 {{-- FINAL Link Update --}}
+                 <a href="{{ route('page.program.show', ['program' => 2]) }}" class="font-semibold text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-200 transition duration-300 mt-4 inline-block">{{ __('learn_more') }} &rarr;</a>
              </div>
-             <div class="p-6">
-                <a href="{{ route('page.programs') }}" class="font-semibold text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-200 transition duration-300">{{ __('learn_more') }} &rarr;</a>
-            </div>
         </div>
 
         {{-- Card: Robotic Engineering --}}
@@ -55,10 +53,9 @@
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
                     {{ __('robotics_desc') }}
                 </p>
+                 {{-- FINAL Link Update --}}
+                 <a href="{{ route('page.program.show', ['program' => 3]) }}" class="font-semibold text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200 transition duration-300 mt-4 inline-block">{{ __('learn_more') }} &rarr;</a>
              </div>
-             <div class="p-6">
-                <a href="{{ route('page.programs') }}" class="font-semibold text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200 transition duration-300">{{ __('learn_more') }} &rarr;</a>
-            </div>
         </div>
 
         {{-- Card: Computer Science --}}
@@ -73,9 +70,8 @@
                 <p class="text-gray-600 dark:text-gray-400 leading-relaxed mt-1">
                     Explores the theoretical foundations of information and computation, from algorithms to AI.
                 </p>
-             </div>
-             <div class="p-6">
-                <a href="{{ route('page.programs') }}" class="font-semibold text-rose-600 hover:text-rose-800 dark:text-rose-400 dark:hover:text-rose-200 transition duration-300">{{ __('learn_more') }} &rarr;</a>
+                 {{-- FINAL Link Update --}}
+                 <a href="{{ route('page.program.show', ['program' => 4]) }}" class="font-semibold text-rose-600 hover:text-rose-800 dark:text-rose-400 dark:hover:text-rose-200 transition duration-300 mt-4 inline-block">{{ __('learn_more') }} &rarr;</a>
             </div>
         </div>
     </div>
