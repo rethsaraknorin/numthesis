@@ -24,9 +24,7 @@ use App\Http\Controllers\UserScheduleController;
 */
 
 // Welcome page
-Route::get('/', function () {
-    return view('welcome');
-})->middleware(RedirectIfAdmin::class);
+Route::get('/', [PageController::class, 'welcome'])->middleware(RedirectIfAdmin::class)->name('welcome');
 
 // Static Page Routes
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
@@ -36,6 +34,8 @@ Route::get('/about/achievements', [PageController::class, 'achievements'])->name
 Route::get('/about/our-professors', [PageController::class, 'ourProfessors'])->name('about.our-professors');
 Route::get('/library', [PageController::class, 'library'])->name('page.library');
 Route::get('/academic-programs', [PageController::class, 'programs'])->name('page.programs');
+Route::get('/programs/{program}', [PageController::class, 'showProgram'])->name('page.program.show');
+Route::get('/events/{event}', [PageController::class, 'showEvent'])->name('page.event.show');
 
 
 // Authentication routes (login, register, etc.)
