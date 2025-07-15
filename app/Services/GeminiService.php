@@ -3,106 +3,109 @@
 namespace App\Services;
 
 use App\Models\Program;
-use App\Models\KeyDate;
-use App\Models\ClassSession;
+use App\Models\TelegramUser;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class GeminiService
 {
-    /**
-     * Handles natural language queries by gathering context and calling the Gemini API.
-     */
-    public function handleQuery(string $userText, \App\Models\TelegramUser $telegramUser): string
+    public function handleQuery(string $userText, TelegramUser $telegramUser): string
     {
-        $language = $telegramUser->language_preference;
+        $language = $telegramUser->language_preference ?? 'kh';
 
         $otherFaculties = ['law', 'business', 'economics', 'management', 'tourism', 'arts'];
         foreach ($otherFaculties as $faculty) {
             if (stripos($userText, $faculty) !== false) {
-                // THIS IS THE CORRECTED KHMER RESPONSE
-                if ($language === 'kh') {
-                    return 'សូមអភ័យទោស ខ្ញុំជាជំនួយការ AI សម្រាប់តែដេប៉ាតឺម៉ង់បច្ចេកវិទ្យាព័ត៌មាន (IT) ប៉ុណ្ណោះ។ ខ្ញុំមិនមានទិន្នន័យសម្រាប់ដេប៉ាតឺម៉ង់ផ្សេងទៀតនៅឡើយទេ។';
-                }
-                // THIS IS THE CORRECTED ENGLISH RESPONSE
-                return "I'm sorry, I am an AI assistant for the Faculty of Information Technology only. I don't have data for other faculties at this time.";
+                return $language === 'kh'
+                    ? 'សូមអភ័យទោស ខ្ញុំជាជំនួយការ AI សម្រាប់តែដេប៉ាតឺម៉ង់បច្ចេកវិទ្យាព័ត៌មាន (IT) ប៉ុណ្ណោះ។'
+                    : "I'm sorry, I am an AI assistant for the Faculty of Information Technology only.";
             }
         }
 
-        $context = $this->gatherContext($userText, $telegramUser);
+        $context = $this->gatherContext($userText);
         $contextFound = !empty(trim($context));
 
-        // Build the prompt conditionally
-        $prompt = "You are a helpful and friendly assistant for the National University of Management (NUM)'s Faculty of Information Technology. Today's date is " . now()->format('F j, Y') . ".\n";
-        $prompt .= "The user is communicating in {$language}. Please respond ONLY in the {$language} language.\n";
+        $prompt = "You are NUM-Bot, a friendly and professional AI assistant for the National University of Management's IT Faculty.\n";
+        $prompt .= "You must respond ONLY in the '{$language}' language, as that is the user's preference.\n\n";
 
         if ($contextFound) {
-            $prompt .= "Your primary goal is to answer the user's question based *only* on the specific context I provide below. The Faculty of IT has 4 main programs.\n\n";
-            $prompt .= "CONTEXT FROM DATABASE:\n---\n{$context}\n---\n\n";
+            $prompt .= "Carefully review the following CONTEXT from the university's database. Base your answer *only* on this information.\n";
+            $prompt .= "--- DATABASE CONTEXT ---\n{$context}\n------------------------\n\n";
         } else {
-            $prompt .= "The university database did not have specific information for the user's question. Please use your general knowledge to answer the user's question helpfully, keeping in mind you represent the IT Faculty. If you do not know the answer, say that you are an AI assistant for NUM's IT Faculty and do not have that specific information.\n\n";
+            $prompt .= "The university database did not contain a specific answer for the user's question.\n";
+            $prompt .= "Therefore, use your general knowledge to answer the user's question helpfully. Frame your answer in the context of a student asking about studying Information Technology at a university.\n";
+            $prompt .= "For example, if they ask about preparations, suggest things like focusing on math, logic, and basic programming. If they ask about jobs, suggest roles like developer, analyst, or network administrator.\n";
+            $prompt .= "Do not mention that you are using general knowledge. Just give a confident, helpful answer.\n\n";
         }
-        
-        $prompt .= "USER QUESTION: {$userText}";
+
+        $prompt .= "Based on all of the above, answer this user's question: '{$userText}'";
 
         return $this->callGeminiApi($prompt);
     }
 
-    /**
-     * Gathers all relevant information from the database based on the user's text.
-     */
-    private function gatherContext(string $userText, \App\Models\TelegramUser $telegramUser): string
+    private function gatherContext(string $userText): string
     {
-        $context = "";
-
-        // Logic for program-related queries
         $programs = Program::all();
-        $isGeneralProgramQuery = stripos($userText, 'how many program') !== false ||
-                                 stripos($userText, 'list all program') !== false ||
-                                 (stripos($userText, 'program') !== false && stripos($userText, 'IT faculty') !== false);
+        $isPreparationQuery = preg_match('/prepare|preparation|what should i learn/i', $userText);
+        $isCareerQuery = preg_match('/job|career|work|graduate/i', $userText);
 
-        if ($isGeneralProgramQuery) {
-            $context .= "CONTEXT ON ALL ACADEMIC PROGRAMS IN THE IT FACULTY:\n";
-            $context .= "The IT Faculty has a total of " . $programs->count() . " academic programs.\n";
-            $context .= "They are: ";
-            foreach ($programs as $program) {
-                $context .= "{$program->name} ({$program->code}), ";
+        // 1. Check for specific program queries first
+        foreach ($programs as $program) {
+            if (stripos($userText, $program->code) !== false || stripos($userText, $program->name) !== false) {
+                $context = "CONTEXT FOR PROGRAM: {$program->name} ({$program->code})\n";
+                if ($program->description) $context .= "Program Description: {$program->description}\n";
+                if ($program->preparations) $context .= "What to Prepare: {$program->preparations}\n";
+                if ($program->career_opportunities) $context .= "Career Opportunities: {$program->career_opportunities}\n";
+                if ($program->price_per_year) $context .= "Price per year: \${$program->price_per_year}.\n";
+                return $context; // Found specific info, return immediately
             }
-            $context = rtrim($context, ', ') . ".\n";
-        } else {
+        }
+
+        // 2. If no specific program, check for a general query about preparations or careers
+        if ($isCareerQuery || $isPreparationQuery) {
+            $generalContext = "";
             foreach ($programs as $program) {
-                if (stripos($userText, $program->code) !== false || stripos($userText, $program->name) !== false) {
-                    $context .= "CONTEXT ON A SPECIFIC PROGRAM:\n";
-                    $context .= "Program Name: {$program->name} ({$program->code}).\n";
-                    if ($program->description) $context .= "Description: {$program->description}.\n";
-                    if ($program->price_per_year) $context .= "Price per year: \${$program->price_per_year}.\n";
-                    if ($program->price_per_semester) $context .= "Price per semester: \${$program->price_per_semester}.\n";
-                    break;
+                $programInfo = "";
+                if ($isPreparationQuery && !empty($program->preparations)) {
+                    $programInfo .= "  - To prepare: {$program->preparations}\n";
                 }
+                if ($isCareerQuery && !empty($program->career_opportunities)) {
+                    $programInfo .= "  - Career options: {$program->career_opportunities}\n";
+                }
+                if (!empty($programInfo)) {
+                    $generalContext .= "For the '{$program->name}' program:\n" . $programInfo;
+                }
+            }
+
+            if (!empty($generalContext)) {
+                return "GENERAL INFORMATION FOR ALL IT PROGRAMS:\n" . $generalContext;
             }
         }
         
-        return $context;
+        // 3. If we found nothing relevant, return an empty string to trigger general knowledge
+        return "";
     }
 
-    /**
-     * Calls the Gemini API with the constructed prompt.
-     */
     private function callGeminiApi(string $prompt): string
     {
         $apiKey = env('GEMINI_API_KEY');
+        if (!$apiKey) {
+            Log::error('GEMINI_API_KEY is not set.');
+            return "Sorry, the system is not configured correctly.";
+        }
+        
         $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
 
         try {
-            $response = Http::post($url, ['contents' => [['parts' => [['text' => $prompt]]]]]);
+            $response = Http::timeout(30)->post($url, ['contents' => [['parts' => [['text' => $prompt]]]]]);
             if ($response->failed()) {
-                Log::error('Gemini API request failed', ['body' => $response->body()]);
+                Log::error('Gemini API request failed', ['status' => $response->status(), 'body' => $response->body()]);
                 return "Sorry, I could not process your request at the moment.";
             }
-            return $response->json()['candidates'][0]['content']['parts'][0]['text'];
+            return data_get($response->json(), 'candidates.0.content.parts.0.text', "I'm sorry, I received an unexpected response from the AI. Please try again.");
         } catch (\Exception $e) {
-            Log::error('Exception caught while calling Gemini API', ['message' => $e->getMessage()]);
-            return "Sorry, there was a system error.";
+            Log::error('Exception while calling Gemini API', ['message' => $e->getMessage()]);
+            return "Sorry, there was a system error while contacting the AI service.";
         }
     }
 }
