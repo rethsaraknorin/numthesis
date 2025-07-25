@@ -22,7 +22,6 @@ class TelegramWebhookController extends Controller
     {
         $update = $telegram->getWebhookUpdate();
 
-        // Safety Check: Prevent errors if the update is empty
         if (!$update) {
             Log::warning('Received an empty or invalid Telegram update.');
             return response()->json(['status' => 'empty_update']);
@@ -80,11 +79,13 @@ class TelegramWebhookController extends Controller
             return;
         }
 
+        // --- START OF CHANGES ---
         $questionMap = [
-            'ask_programs'   => 'What are the programs in the IT faculty?',
-            'ask_prepare'    => 'What should I prepare for those programs?',
-            'ask_jobs'       => 'What jobs can they do after graduation?',
+            'ask_how_many_programs' => 'How many programs are in the IT faculty?',
+            'ask_math_requirement'  => "If I'm bad at math, can I study IT?",
+            'ask_jobs'              => 'What jobs can I do after graduating?',
         ];
+        // --- END OF CHANGES ---
 
         if (isset($questionMap[$callbackData])) {
             $text = $questionMap[$callbackData];
@@ -115,7 +116,17 @@ class TelegramWebhookController extends Controller
     private function handleHelpCommand(Api $telegram, int $chatId): void
     {
         $helpMessage = "Here are some common questions you can ask. Just click a button below!";
-        $keyboard = ['inline_keyboard' => [[['text' => 'What are the programs in the IT faculty?', 'callback_data' => 'ask_programs']], [['text' => 'What should I prepare for those programs?', 'callback_data' => 'ask_prepare']], [['text' => 'What jobs can I do after graduating?', 'callback_data' => 'ask_jobs']]]];
+        
+        // --- START OF CHANGES ---
+        $keyboard = [
+            'inline_keyboard' => [
+                [['text' => 'How many programs are in the IT faculty?', 'callback_data' => 'ask_how_many_programs']],
+                [['text' => "If I'm bad at math, can I study IT?", 'callback_data' => 'ask_math_requirement']],
+                [['text' => 'What jobs can I do after graduating?', 'callback_data' => 'ask_jobs']],
+            ]
+        ];
+        // --- END OF CHANGES ---
+        
         $telegram->sendMessage(['chat_id' => $chatId, 'text' => $helpMessage, 'reply_markup' => json_encode($keyboard)]);
     }
 }
