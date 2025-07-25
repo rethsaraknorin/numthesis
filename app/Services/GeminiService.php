@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Program;
 use App\Models\TelegramUser;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -47,27 +48,29 @@ class GeminiService
     {
         $language = $telegramUser->language_preference ?? 'kh';
         
-        // Step 1: Use the AI to understand the user's intent.
         $intent = $this->classifyUserIntent($userText);
 
-        // Step 2: Check if there's a perfect, predefined answer for this intent.
         $predefinedAnswer = $this->getPredefinedAnswer($intent, $language);
         if ($predefinedAnswer !== null) {
-            return $predefinedAnswer; // If yes, return it immediately.
+            return $predefinedAnswer;
         }
 
-        // Step 3: If no predefined answer, gather dynamic context from the database.
         $context = "";
         $contextFound = false;
-        if ($intent === 'ask_about_program' || $intent === 'general_conversation') {
-            $context = $this->gatherContext($userText, $language);
-            $contextFound = !empty(trim($context));
+
+        $contextResult = $this->gatherContext($userText, $language);
+
+        if ($contextResult['type'] === 'direct') {
+            return $contextResult['content'];
         }
 
-        // Step 4: Build the final prompt and get the main AI response.
+        $context = $contextResult['content'];
+        $contextFound = !empty(trim($context));
+
         $prompt = "You are NUM-Bot, a helpful AI assistant for NUM's IT Faculty.\n";
+        
         if ($language === 'kh') {
-            $prompt .= "You MUST respond using the Khmer alphabet (អក្សរខ្មែរ).\n\n";
+            $prompt .= "You MUST respond using ONLY the Khmer alphabet (អក្សរខ្មែរ). Do NOT include any English romanization or transliteration of the Khmer words in your response.\n\n";
         } else {
             $prompt .= "You must respond ONLY in English.\n\n";
         }
@@ -85,39 +88,40 @@ class GeminiService
     }
 
     /**
-     * Gathers context about academic programs. This is the latest, most robust version.
+     * Gathers context about academic programs.
+     * NOW RETURNS an array with a 'type' to indicate if it's a direct answer or just context.
      */
-    private function gatherContext(string $userText, string $language): string
+    private function gatherContext(string $userText, string $language): array
     {
         $allPrograms = Program::all();
 
-        // PRIORITY 1: Check for "list all programs" questions with flexible grammar.
         $isListAllQuery = preg_match('/how many program(s)?|what program(s)?|list (of )?program(s)?|all program(s)?|what are they|what they are|ជំនាញអ្វីខ្លះ|មានជំនាញអ្វីខ្លះ/i', $userText);
         if ($isListAllQuery) {
             if ($allPrograms->isEmpty()) {
-                return "The database does not currently list any programs.";
+                $content = $language === 'kh' ? 'មិនមានកម្មវិធីសិក្សាទេ' : 'There are no programs available.';
+                return ['type' => 'direct', 'content' => $content];
             }
 
+            $programCount = $allPrograms->count();
+            
             if ($language === 'kh') {
-                $programCount = $allPrograms->count();
-                $context = "មាន​កម្មវិធី​សិក្សា​ចំនួន {$programCount} នៅ​ក្នុង​មហាវិទ្យាល័យ​ព័ត៌មាន​វិទ្យា។ ខាងក្រោមនេះជាបញ្ជីពេញលេញ៖\n";
+                $content = "មានកម្មវិធីសិក្សាសរុបចំនួន ៤ នៅមហាវិទ្យាល័យព័ត៌មានវិទ្យា។ កម្មវិធីទាំងនោះរួមមានតម្លៃសិក្សាដូចខាងក្រោម៖\n\n";
                 foreach ($allPrograms as $program) {
-                    $context .= "- {$program->name} ({$program->code}): \${$program->price_per_year} ក្នុងមួយឆ្នាំ\n";
+                    $content .= "- {$program->name} ({$program->code}): \${$program->price_per_year} ក្នុងមួយឆ្នាំ\n";
                 }
             } else {
-                $context = "The IT Faculty offers " . $allPrograms->count() . " programs. Here is the full list with prices per year:\n";
+                $content = "There are a total of {$programCount} programs in the IT Faculty. Here is the full list with prices per year:\n\n";
                 foreach ($allPrograms as $program) {
-                    $context .= "- {$program->name} ({$program->code}): \${$program->price_per_year}\n";
+                    $content .= "- {$program->name} ({$program->code}): \${$program->price_per_year}\n";
                 }
             }
-            return $context;
+            return ['type' => 'direct', 'content' => $content];
         }
 
-        // PRIORITY 2: If not listing all, find the best match for a SINGLE program.
         $programsSortedByCode = $allPrograms->sortByDesc(fn($p) => strlen($p->code));
         foreach ($programsSortedByCode as $program) {
             if (preg_match('/\b' . preg_quote($program->code, '/') . '\b/i', $userText)) {
-                return $this->buildContextForProgram($program);
+                return ['type' => 'context', 'content' => $this->buildContextForProgram($program)];
             }
         }
 
@@ -126,21 +130,27 @@ class GeminiService
             $stopWords = ['bachelor of', 'master of', 'of', 'and', 'in'];
             $cleanedName = trim(preg_replace('/\s+/', ' ', str_ireplace($stopWords, '', $program->name)));
             if (!empty($cleanedName) && stripos($userText, $cleanedName) !== false) {
-                return $this->buildContextForProgram($program);
+                return ['type' => 'context', 'content' => $this->buildContextForProgram($program)];
             }
         }
 
-        return "";
+        return ['type' => 'context', 'content' => ''];
     }
 
     private function buildContextForProgram(Program $program): string
     {
         $context = "CONTEXT FOR PROGRAM: {$program->name} ({$program->code})\n";
+        $context .= "Program Level: Bachelor's Degree.\n";
+        $context .= "Duration: 4 years.\n";
+        
         if ($program->description) {
             $context .= "Program Description: {$program->description}\n";
         }
         if ($program->price_per_year) {
             $context .= "Price per year: \${$program->price_per_year}.\n";
+        }
+        if ($program->price_per_semester) {
+            $context .= "Price per semester: \${$program->price_per_semester}.\n";
         }
         return $context;
     }
@@ -153,16 +163,27 @@ class GeminiService
             return "Sorry, the system is not configured correctly.";
         }
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
+        
         try {
             $response = Http::timeout(30)->post($url, ['contents' => [['parts' => [['text' => $prompt]]]]]);
+            
             if ($response->failed()) {
                 Log::error('Gemini API request failed', ['status' => $response->status(), 'body' => $response->body()]);
+                if ($response->status() === 503) {
+                    return "I'm experiencing high traffic right now. Please try again in a moment.";
+                }
                 return "Sorry, I could not process your request at the moment.";
             }
+
             return data_get($response->json(), 'candidates.0.content.parts.0.text', "I'm sorry, I received an unexpected response from the AI. Please try again.");
+        
+        } catch (ConnectionException $e) {
+            Log::error('Gemini API connection timed out', ['message' => $e->getMessage()]);
+            return "I'm having trouble connecting to my brain right now. Please try your question again in a moment.";
+        
         } catch (\Exception $e) {
             Log::error('Exception while calling Gemini API', ['message' => $e->getMessage()]);
-            return "Sorry, there was a system error while contacting the AI service.";
+            return "Sorry, a system error occurred. Please try again later.";
         }
     }
 }
