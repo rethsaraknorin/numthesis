@@ -17,47 +17,80 @@ class BookSeeder extends Seeder
         DB::table('books')->delete();
 
         Book::create([
-            'title' => 'Clean Code: A Handbook of Agile Software Craftsmanship',
-            'author' => 'Robert C. Martin',
-            'publisher' => 'Prentice Hall',
-            'publication_year' => 2008,
-            'description' => 'A must-read for any software developer. This book is filled with practical advice on how to write clean, maintainable code.',
-            'book_link' => 'https://www.oreilly.com/library/view/clean-code-a/9780136083238/',
-            'picture' => 'books/clean-code.jpg',
-            'book_types' => ['Programming', 'Software Craftsmanship']
-        ]);
-
-        Book::create([
-            'title' => 'Laravel: Up & Running',
-            'author' => 'Matt Stauffer',
-            'publisher' => 'Reilly Media',
-            'publication_year' => 2019,
-            'description' => 'A comprehensive guide to the Laravel framework, covering everything from the basics to advanced topics.',
-            'book_link' => 'https://www.oreilly.com/library/view/laravel-up/9781492041183/',
-            'picture' => 'books/laravel-up-and-running.jpg',
-            'book_types' => ['Web Development', 'PHP', 'Laravel']
+            'title' => 'កម្មវិធីឌីជីថលវាយតម្លៃសាស្រ្ដាចារ្',
+            'author' => 'នី វង្សសុចិត្រា',
+            'publisher' => 'នី វង្សសុចិត្រា',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/14h-eJ7aiPndxMdldfQuJI9HTD5uG7MiH/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
         ]);
         
         Book::create([
-            'title' => 'Python for Data Analysis',
-            'author' => 'Wes McKinney',
-            'publisher' => 'Reilly Media',
-            'publication_year' => 2017,
-            'description' => 'A practical guide to data analysis using the Python programming language.',
-            'book_link' => 'https://www.oreilly.com/library/view/python-for-data/9781491957653/',
-            'picture' => 'books/python-for-data-analysis.jpg',
-            'book_types' => ['Data Science', 'Python', 'Programming']
+            'title' => 'ប្រព័ន្ធបង់ប្រាក់ស្វ័យប្រវត្តិដោយប្រើ QR-Code និង NFC នៃចំណតយានជំនិះ ក្នុងសាកលវិទ្យាល័យជាតិគ្រប់គង',
+            'author' => 'ជី វឌ្ឍនា',
+            'publisher' => 'ជី វឌ្ឍនា',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/1k4LXLtpqyS3RV73R89PjrI6S1HkJDdmc/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
         ]);
 
         Book::create([
-            'title' => 'The Pragmatic Programmer: Your Journey to Mastery',
-            'author' => 'David Thomas, Andrew Hunt',
-            'publisher' => 'Addison-Wesley Professional',
-            'publication_year' => 2019,
-            'description' => 'A classic book that provides timeless advice on software development.',
-            'book_link' => 'https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/',
-            'picture' => 'books/the-pragmatic-programmer.jpg',
-            'book_types' => ['Programming', 'Software Craftsmanship']
+            'title' => 'NUM VIRTUAL ASSISTANT',
+            'author' => 'ឆៃ រ៉ាឈីត',
+            'publisher' => 'ឆៃ រ៉ាឈីត',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/1PTxWBwEpCWvLen59EhjPG1INbklBZGFb/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
+        ]);
+
+        Book::create([
+            'title' => 'NUM-Faculty of Information Technology Website',
+            'author' => 'គឹម សំណាង',
+            'publisher' => 'គឹម សំណាង',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/1UCt3NpuptyB3wOGNjiAU74BlJhbQmbQj/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
+        ]);
+
+        Book::create([
+            'title' => 'NUM Online Meeting Website for University Students',
+            'author' => 'រ័ត្ន ដរារាជ',
+            'publisher' => 'រ័ត្ន ដរារាជ',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/1n-88EP2gB7QlfhBjUZQzIx-bBWwupLnD/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
+        ]);
+
+        Book::create([
+            'title' => 'NUM ONLINE EXAM',
+            'author' => 'Peng Chaitet',
+            'publisher' => 'Peng Chaitet',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/16kLMW-ylmdHrSBbfWmiylIKFVCu6xPQk/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
+        ]);
+
+        Book::create([
+            'title' => 'NUM CAM CONVERTER',
+            'author' => 'រ៉ន ម៉េងហួយ',
+            'publisher' => 'រ៉ន ម៉េងហួយ',
+            'publication_year' => 2024,
+            'description' => '',
+            'book_link' => 'https://drive.google.com/file/d/1dXNMAZ3Y8eBN2jqHaXoctbKoNURPUZcv/view?usp=sharing',
+            'picture' => 'books/cover_top10_2024.png',
+            'book_types' => ['Thesis']
         ]);
     }
 }
