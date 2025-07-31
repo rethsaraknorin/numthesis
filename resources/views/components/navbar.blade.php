@@ -49,7 +49,7 @@
                       <a href="{{ route('about.our-story') }}" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">{{ __('our_story') }}</a>
                       <a href="{{ route('about.achievements') }}" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">{{ __('achievements') }}</a>
                       <a href="{{ route('about.our-professors') }}" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">{{ __('our_professors') }}</a> {{-- <-- ADD THIS LINE --}}
-                      <a href="#" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">{{ __('careers') }}</a>
+                      {{-- <a href="#" class="block px-3 py-2 text-sm rounded-md text-gray-800 dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-colors">{{ __('careers') }}</a> --}}
                   </div>
               </div>
           </div>

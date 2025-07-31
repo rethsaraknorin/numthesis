@@ -99,14 +99,14 @@
                     {{ __('Events') }}
                 </x-nav-link>
 
-                <x-nav-link href="#" :active="request()->routeIs('admin.jobs.*')">
+                {{-- <x-nav-link href="#" :active="request()->routeIs('admin.jobs.*')">
                     <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M20.25 14.15v4.07a2.25 2.25 0 01-2.25 2.25h-13.5a2.25 2.25 0 01-2.25-2.25v-4.07m16.5 0a2.25 2.25 0 00-2.25-2.25h-13.5a2.25 2.25 0 00-2.25 2.25m16.5 0v-4.07a2.25 2.25 0 00-2.25-2.25h-13.5a2.25 2.25 0 00-2.25 2.25v4.07" />
                     </svg>
                     {{ __('Job Opportunity') }}
-                </x-nav-link>
+                </x-nav-link> --}}
             </nav>
         </div>
 
