@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Story - IT Faculty - National University of Management</title>
+    <title>{{ __('our_story_title') }} - IT Faculty - National University of Management</title>
     
     <link rel="icon" href="{{ asset('assets/logo/num-logo.png') }}">
 
@@ -28,8 +28,8 @@
     <main>
         <header class="hero-bg-about h-96 flex items-center justify-center text-white">
             <div class="text-center px-4">
-                <h1 class="text-5xl font-bold">Our Faculty's Story</h1>
-                <p class="mt-4 text-xl text-gray-300">A Legacy of Excellence and Innovation in Technology</p>
+                <h1 class="text-5xl font-bold">{{ __('our_story_title') }}</h1>
+                <p class="mt-4 text-xl text-gray-300">{{ __('our_story_subtitle') }}</p>
             </div>
         </header>
 
@@ -37,12 +37,12 @@
             <div class="container mx-auto px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Our Journey in Technology</h2>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ __('our_journey_title') }}</h2>
                         <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                           The Faculty of Information Technology is a proud and dynamic part of the National University of Management (NUM). While the university was founded in 1983, our faculty represents the cutting-edge of its evolution, born from a spirit of innovation and a commitment to Cambodia's technological future.
+                           {{ __('our_journey_p1') }}
                         </p>
                         <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-                           Our programs in Information Technology, Business IT, and Robotic Engineering were established to meet the growing demands of the digital age and Industry 4.0. We are dedicated to nurturing the next generation of tech leaders, developers, and innovators who will drive Cambodia's growth on the global stage.
+                           {{ __('our_journey_p2') }}
                         </p>
                     </div>
                     <div>
@@ -52,15 +52,15 @@
 
                 <div class="mt-20 grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-lg">
-                        <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">Our Mission</h3>
+                        <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">{{ __('our_mission_title') }}</h3>
                         <p class="text-gray-600 dark:text-gray-300">
-                            To be a leading faculty in Cambodia, providing world-class education, research, and community service with a focus on developing competent and socially responsible technologists, innovators, and leaders for the digital economy.
+                            {{ __('our_mission_body') }}
                         </p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-900/50 p-8 rounded-lg">
-                        <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">Our Vision</h3>
+                        <h3 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-3">{{ __('our_vision_title') }}</h3>
                         <p class="text-gray-600 dark:text-gray-300">
-                            To become a nationally and internationally recognized hub of technological excellence, fostering innovation and contributing to the sustainable development of Cambodia and the region through technology.
+                            {{ __('our_vision_body') }}
                         </p>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
 
         <section class="py-20">
              <div class="container mx-auto px-6 lg:px-8">
-                <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">Key Milestones of NUM</h2>
+                <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">{{ __('key_milestones_title') }}</h2>
                 <div class="relative">
                     <div class="absolute left-1/2 w-0.5 h-full bg-indigo-300 dark:bg-gray-700 -translate-x-1/2"></div>
                     
@@ -77,8 +77,8 @@
                         <div class="relative flex items-center">
                             <div class="w-1/2 pr-8 text-right">
                                 <p class="font-bold text-indigo-600 dark:text-indigo-400">1983</p>
-                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Establishment</h4>
-                                <p class="text-gray-600 dark:text-gray-400">The university is founded as the Economic Institute.</p>
+                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('milestone1_title') }}</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ __('milestone1_body') }}</p>
                             </div>
                             <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
@@ -86,25 +86,25 @@
                             <div class="w-1/2"></div>
                             <div class="w-1/2 pl-8">
                                 <p class="font-bold text-indigo-600 dark:text-indigo-400">1998</p>
-                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Becoming NIM</h4>
-                                <p class="text-gray-600 dark:text-gray-400">The institution is renamed the National Institute of Management (NIM).</p>
+                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('milestone2_title') }}</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ __('milestone2_body') }}</p>
                             </div>
                              <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
                          <div class="relative flex items-center">
                             <div class="w-1/2 pr-8 text-right">
                                 <p class="font-bold text-indigo-600 dark:text-indigo-400">2004</p>
-                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">University Status</h4>
-                                <p class="text-gray-600 dark:text-gray-400">Officially becomes the National University of Management (NUM).</p>
+                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('milestone3_title') }}</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ __('milestone3_body') }}</p>
                             </div>
                             <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
                         <div class="relative flex items-center">
                             <div class="w-1/2"></div>
                             <div class="w-1/2 pl-8">
-                                <p class="font-bold text-indigo-600 dark:text-indigo-400">2011 - Present</p>
-                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Focus on Technology</h4>
-                                <p class="text-gray-600 dark:text-gray-400">The Faculty of IT grows, launching programs for Industry 4.0 and establishing the International College.</p>
+                                <p class="font-bold text-indigo-600 dark:text-indigo-400">2011 - {{ __('present') }}</p>
+                                <h4 class="text-xl font-semibold text-gray-800 dark:text-gray-200">{{ __('milestone4_title') }}</h4>
+                                <p class="text-gray-600 dark:text-gray-400">{{ __('milestone4_body') }}</p>
                             </div>
                              <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-2 border-indigo-500 rounded-full"></div>
                         </div>
