@@ -4,8 +4,8 @@
 <section id="events" class="py-20 bg-gray-50 dark:bg-gray-800/50">
     <div class="container mx-auto px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">University Events</h2>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">Stay connected with our vibrant campus life.</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">{{ __('events_title') }}</h2>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">{{ __('events_subtitle') }}</p>
             <div class="w-24 h-1 bg-cyan-500 mx-auto mt-4"></div>
         </div>
 
@@ -20,17 +20,16 @@
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mt-2">{{ $event->title }}</h3>
                         <div class="text-gray-600 dark:text-gray-400 mt-2 line-clamp-3 flex-grow">{!! nl2br(e($event->description)) !!}</div>
                         
-                        {{-- UPDATED: "See More" link to the event detail page --}}
                         <div class="mt-4">
                             <a href="{{ route('page.event.show', $event) }}" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">
-                                See More &rarr;
+                                {{ __('see_more') }} &rarr;
                             </a>
                         </div>
                     </div>
                 </div>
             @empty
                 <div class="col-span-full text-center py-12">
-                    <p class="text-lg text-gray-600 dark:text-gray-400">No upcoming events at the moment. Please check back soon!</p>
+                    <p class="text-lg text-gray-600 dark:text-gray-400">{{ __('no_events') }}</p>
                 </div>
             @endforelse
         </div>
