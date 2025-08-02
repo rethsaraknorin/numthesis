@@ -81,7 +81,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const typedTextSpan = document.getElementById('typed-text');
             if (typedTextSpan) {
-                const words = ["{{ __('welcome_typed_it') }}", "{{ __('welcome_typed_bit') }}", "{{ __('welcome_typed_robotics') }}"];
+                const words = ["{{ __('welcome_typed_it') }}", "{{ __('welcome_typed_bit') }}", "{{ __('welcome_typed_robotics') }}", "{{ __('welcome_typed_cs') }}"];
                 let wordIndex = 0, charIndex = 0, isDeleting = false;
                 function type() {
                     const currentWord = words[wordIndex];
