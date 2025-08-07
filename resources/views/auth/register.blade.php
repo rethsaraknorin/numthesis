@@ -1,14 +1,13 @@
 <x-guest-layout>
     <div class="px-6 py-8">
-        <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-white">Create a new account</h2>
+        <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-white">{{ __('Create a new account') }}</h2>
         <p class="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
-            Or <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">sign in to your account</a>
+            {{ __('Or') }} <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">{{ __('sign in to your account') }}</a>
         </p>
 
         <form method="POST" action="{{ route('register') }}" class="mt-8 space-y-6">
             @csrf
 
-            <!-- Name -->
             <div>
                 <x-input-label for="name" :value="__('Name')" />
                 <div class="relative mt-1">
@@ -21,7 +20,6 @@
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
-            <!-- Email Address -->
             <div class="mt-4">
                 <x-input-label for="email" :value="__('Email')" />
                 <div class="relative mt-1">
@@ -34,7 +32,6 @@
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
-            <!-- Phone -->
             <div class="mt-4">
                 <x-input-label for="phone" :value="__('Phone Number')" />
                  <div class="relative mt-1">
@@ -47,7 +44,6 @@
                 <x-input-error :messages="$errors->get('phone')" class="mt-2" />
             </div>
 
-            <!-- Password -->
             <div class="mt-4" x-data="{ showPassword: false }">
                 <x-input-label for="password" :value="__('Password')" />
                  <div class="relative mt-1">
@@ -66,7 +62,6 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
-            <!-- Confirm Password -->
             <div class="mt-4" x-data="{ showPassword: false }">
                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                 <div class="relative mt-1">

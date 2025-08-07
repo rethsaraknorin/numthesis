@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Professors - IT Faculty - National University of Management</title>
+    <title>{{ __('our_professors') }} - IT Faculty - National University of Management</title>
     
     <link rel="icon" href="{{ asset('assets/logo/num-logo.png') }}">
 
@@ -29,8 +29,8 @@
         
         <div class="h-full flex items-center justify-center text-white">
             <div class="text-center px-4">
-                <h1 class="text-5xl font-bold">Meet Our Faculty</h1>
-                <p class="mt-4 text-xl text-gray-300">The dedicated minds shaping the future of technology.</p>
+                <h1 class="text-5xl font-bold">{{ __('meet_our_faculty_title') }}</h1>
+                <p class="mt-4 text-xl text-gray-300">{{ __('meet_our_faculty_subtitle') }}</p>
             </div>
         </div>
     </div>
@@ -39,7 +39,6 @@
         <section class="py-20 bg-white dark:bg-gray-800">
             <div class="container mx-auto px-6 lg:px-8">
                 
-                {{-- UPDATED: New card design with circular image and "Read More" functionality --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     
                     @php
@@ -176,7 +175,6 @@
                     @foreach ($professors as $prof)
                         <div x-data="{ isExpanded: false }" class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col transition-all duration-300">
                             
-                            {{-- Image, Name, and Title Section --}}
                             <div class="p-6 text-center">
                                 <img class="w-32 h-32 mx-auto rounded-full object-cover mb-4 shadow-md ring-4 ring-cyan-300 dark:ring-cyan-500" 
                                      src="{{ $prof['image'] ? $prof['image'] : 'https://via.placeholder.com/150/CBD5E0/4A5568?text=NUM' }}" 
@@ -185,7 +183,6 @@
                                 <p class="text-lg font-semibold text-indigo-500 dark:text-indigo-400 mt-1">{{ $prof['title'] }}</p>
                             </div>
                             
-                            {{-- Description Section with "Read More" --}}
                             <div class="p-6 pt-0 flex-grow flex flex-col">
                                 <div class="flex-grow relative">
                                     <p class="text-md text-gray-600 dark:text-gray-400 leading-relaxed" 
@@ -194,8 +191,8 @@
                                     </p>
                                 </div>
                                 <button @click="isExpanded = !isExpanded" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline mt-4 self-center">
-                                    <span x-show="!isExpanded">Read More</span>
-                                    <span x-show="isExpanded">Read Less</span>
+                                    <span x-show="!isExpanded">{{ __('read_more') }}</span>
+                                    <span x-show="isExpanded">{{ __('read_less') }}</span>
                                 </button>
                             </div>
                         </div>
