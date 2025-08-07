@@ -8,8 +8,8 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">Find Your Path in Technology</h3>
-                <p class="text-md text-gray-600 dark:text-gray-400 mt-2">Explore our specialized programs designed to launch your career in IT.</p>
+                <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{{ __('find_your_path') }}</h3>
+                <p class="text-md text-gray-600 dark:text-gray-400 mt-2">{{ __('explore_specialized_programs') }}</p>
             </div>
 
             {{-- UPDATED: Changed from a multi-column grid to a single-column layout (space-y-8) --}}
@@ -34,14 +34,14 @@
                             <p class="font-normal text-gray-600 dark:text-gray-400 mt-1">{{ $program->description }}</p>
                             @if($program->price_per_year)
                                 <div class="text-sm text-gray-800 dark:text-gray-200 mt-2">
-                                    <span class="font-semibold">Starting from:</span> 
-                                    <span class="text-lg font-bold">${{ number_format($program->price_per_year, 2) }}</span>/year
+                                    <span class="font-semibold">{{ __('starting_from_price') }}</span> 
+                                    <span class="text-lg font-bold">${{ number_format($program->price_per_year, 2) }}</span>/{{ __('year') }}
                                 </div>
                             @endif
                         </div>
                         <div class="p-6">
                             <a href="{{ route('programs.show', $program) }}" class="inline-flex items-center font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200">
-                                View Curriculum
+                                {{ __('View Curriculum') }}
                                 <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                             </a>
                         </div>
