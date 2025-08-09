@@ -21,12 +21,17 @@ class GeminiService
                 'en' => 'The National University of Management (NUM) is located at Christopher Howes Street (96), Sangkat Wat Phnom, Khan Daun Penh, Phnom Penh.'
             ],
             'get_rector' => [
-                'kh' => 'នាយក​សាលា​បច្ចុប្បន្ន​គឺ​បណ្ឌិត​ ហោ ប៉េង។',
+                'kh' => 'សាកលវិទ្យាធិការបច្ចុប្បន្នគឺ បណ្ឌិត ហោ ប៉េង។',
                 'en' => 'The current Rector is Dr. HOR Peng.'
             ],
             'get_dean_it' => [
-                'kh' => 'ព្រឹទ្ធបុរស​នៃ​មហាវិទ្យាល័យ​អាយធី គឺ​សាស្ត្រាចារ្យ​បណ្ឌិត ឆាយ ផាង។',
-                'en' => 'The Dean of the IT Faculty is Professor Dr. Chhay Phang.'
+                'kh' => 'ព្រឹទ្ធបុរសនៃមហាវិទ្យាល័យបច្ចេកវិទ្យាព័ត៌មាន (FIT) គឺ សាស្ត្រាចារ្យបណ្ឌិត ឆាយ ផាង។',
+                'en' => 'The Dean of the Faculty of Information Technology (FIT) is Professor Dr. Chhay Phang.'
+            ],
+            // --- ADDED NEW INTENT FOR HEAD OF DEPARTMENT ---
+            'get_head_of_it_department' => [
+                'kh' => 'ប្រធានដេប៉ាតឺម៉ង់នៃមហាវិទ្យាល័យបច្ចេកវិទ្យាព័ត៌មានគឺ សាស្ត្រាចារ្យរងបណ្ឌិត ឈុន រ៉ាឌី។',
+                'en' => 'The Head of the Department of the Faculty of Information Technology is Associate Professor Dr. Chhun Rady.'
             ],
             'get_shift_info' => [
                 'kh' => 'មាន ៣ វេនសម្រាប់ជ្រើសរើស៖ ពេលព្រឹក ពេលរសៀល និងពេលយប់។',
@@ -47,6 +52,10 @@ class GeminiService
             'get_program_overview' => [
                 'kh' => "CS (Computer Science): ផ្តោតសំខាន់លើការសរសេរកម្មវិធី ក្បួនដោះស្រាយ និងទ្រឹស្តីកុំព្យូទ័រ។\nIT (Information Technology): ផ្តោតលើការអនុវត្តបច្ចេកវិទ្យាក្នុងការដោះស្រាយបញ្ហានៅក្នុងស្ថាប័ន។\nBIT (Business Information Technology): ជាការរួមបញ្ចូលគ្នារវាង IT និងអាជីវកម្ម ដោយផ្តោតលើការប្រើប្រាស់បច្ចេកវិទ្យាដើម្បីដោះស្រាយបញ្ហាអាជីវកម្ម។\nRobotic: រចនា បង្កើត និងសរសេរកម្មវិធីប្រព័ន្ធឆ្លាតវៃ និងស្វ័យប្រវត្តិកម្ម។",
                 'en' => "CS (Computer Science): Focuses on programming, algorithms, and computational theory.\nIT (Information Technology): Focuses on applying computer technology to solve problems in organizations.\nBIT (Business Information Technology): A combination of IT and business, preparing students to apply IT in the business world.\nRobotic: Design, build, and program intelligent and automated systems."
+            ],
+            'get_it_requirements' => [
+                'kh' => 'សម្រាប់ការសិក្សាផ្នែក IT អ្នកត្រូវមានចំណេះដឹងភាសាអង់គ្លេស និងគណិតវិទ្យាកម្រិតមធ្យម ហើយសម្រាប់អ្នកដែលទទួលបានសញ្ញាបត្រនិទ្ទេស A-D ក៏អាចសិក្សាជំនាញនេះបានដែរ។',
+                'en' => 'For IT, you need to know English and intermediate math, and for those who receive A-D certificates, you can learn IT.'
             ]
         ];
         return $answers[$intent][$language] ?? null;
@@ -58,17 +67,23 @@ class GeminiService
     private function classifyUserIntent(string $userText): string
     {
         $intents = [
-            'get_location', 'get_rector', 'get_dean_it', 'get_shift_info', 'get_shift_change_policy',
+            'get_location', 'get_rector', 'get_dean_it', 'get_head_of_it_department', 'get_shift_info', 'get_shift_change_policy',
             'get_document_confirmation', 'get_faculty_establishment_date', 'get_program_overview',
             'get_program_comparison',
+            'get_it_requirements',
             'ask_about_program', 'general_conversation'
         ];
         
         $prompt = "Based on the user's question, classify it into ONE of the following categories: " . implode(', ', $intents) . ". Respond with ONLY the category name.\n\n";
         $prompt .= "Hints:\n";
+        // --- IMPROVED HINTS FOR CLARITY ---
+        $prompt .= "- If they ask about the Rector (សាកលវិទ្យាធិការ), the head of the whole university, use 'get_rector'.\n";
+        $prompt .= "- If they ask about the Dean (ព្រឹទ្ធបុរស), the head of the IT Faculty, 'អ្នកគ្រប់គ្រងមហាវិទ្យាល័យ IT', or 'manager of the IT faculty', use 'get_dean_it'.\n";
+        $prompt .= "- If they ask about the Head of the IT Department (ប្រធានដេប៉ាតឺម៉ង់), use 'get_head_of_it_department'.\n";
         $prompt .= "- If they ask when the faculty was created or established, use 'get_faculty_establishment_date'.\n";
         $prompt .= "- If they ask what IT, CS, or BIT are about in general, use 'get_program_overview'.\n";
         $prompt .= "- If they ask for the difference or comparison between any two programs (e.g., 'compare CS and IT', 'IT vs BIT'), use 'get_program_comparison'.\n";
+        $prompt .= "- If they ask about what is needed or required to learn/study IT, use 'get_it_requirements'.\n";
         $prompt .= "- If they ask about a single specific program's details (like price or curriculum), use 'ask_about_program'.\n\n";
         $prompt .= "User Question: \"{$userText}\"";
 
@@ -87,7 +102,6 @@ class GeminiService
     {
         $language = $telegramUser->language_preference ?? 'kh';
 
-        // --- CORRECTED LOGIC: Check for "list all programs" query FIRST ---
         $isListAllQuery = preg_match('/how many program(s)?|what program(s)?|list (of )?program(s)?|all program(s)?|what are they|what they are|ជំនាញអ្វីខ្លះ|មានជំនាញអ្វីខ្លះ|ជំនាញអីខ្លះ|ជំនាញអី|ជំនាញអី្វ/i', $userText);
         if ($isListAllQuery) {
             return $this->handleListAllPrograms($language);
