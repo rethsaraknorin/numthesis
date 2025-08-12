@@ -1,61 +1,99 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# NUM Smart Faculty Site
+### A Final Year Thesis Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository contains the source code for my final year thesis project, a comprehensive web platform developed for the **Faculty of Information Technology at the National University of Management (NUM)**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 Project Overview & Purpose
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+As a requirement for the completion of my Bachelor's Degree, this project aims to design and implement a modern, all-in-one digital solution to enhance the student and faculty experience at the NUM IT Faculty.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The primary goal is to centralize information and services, creating a single, reliable hub for academic details, student schedules, university resources, and instant support through an intelligent AI assistant. This platform addresses the need for a more integrated and accessible digital environment for both prospective and current students.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Key Features
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+This platform is built on four core components:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### 1. Public-Facing Website
+* **Dynamic Homepage:** A professional landing page with the latest news and updates.
+* **Academic Program Showcase:** A detailed view of all available degrees (CS, IT, BIT), including curricula and tuition fees, managed directly from a database.
+* **Faculty & Events Portals:** Pages to introduce the university's esteemed professors and showcase upcoming university events.
+* **Fully Responsive Design:** Ensures a seamless experience on desktops, tablets, and mobile phones.
 
-## Laravel Sponsors
+#### 2. Secure Student Dashboard
+* **Secure Authentication:** A robust login system for registered students.
+* **Personalized Class Schedule:** Each student can view their unique, dynamically generated class timetable.
+* **Profile Management:** Allows students to manage their personal information securely.
+* **Digital Library:** A portal to access university-provided books and learning resources.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### 3. Administrative Backend
+* **Role-Based Access Control:** A secure backend accessible only to authorized administrators.
+* **Full Content Management System (CMS):**
+    * Manage **Academic Programs**, **Course Schedules**, and **University Events**.
+    * **User Management:** Admins can review, approve, and manage student accounts.
+    * Upload and manage **Digital Library Books** and resources.
 
-### Premium Partners
+#### 4. NUM-Bot (AI Assistant) 🤖
+* **Powered by Google's Gemini AI:** Provides intelligent and context-aware responses to user queries.
+* **Bilingual Support:** Understands and communicates fluently in both **English** and **Khmer (ខ្មែរ)**.
+* **Real-time Database Integration:** Fetches live information, such as program lists and fees, to ensure answers are always current.
+* **Advanced Intent Recognition:** Accurately distinguishes between complex questions about university roles (e.g., Rector vs. Dean vs. Head of Department).
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 🛠️ Technology Stack
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* **Backend Framework:** Laravel 11 (PHP 8.2)
+* **Frontend:** Blade Templates, Tailwind CSS, JavaScript
+* **Database:** MySQL
+* **AI Integration:** Google Gemini API
+* **Development Environment:** Laravel Sail (Docker)
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🔬 Instructions for Local Testing & Evaluation
 
-## Security Vulnerabilities
+To allow for local testing and evaluation of this project, please follow these setup instructions:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/rethsaraknorin/numthesis.git]
+    cd numthesis
+    ```
 
-## License
+2.  **Install PHP Dependencies:**
+    ```bash
+    composer install
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3.  **Configure Environment:**
+    * Create a `.env` file by copying `.env.example`.
+    * Update your Database credentials (`DB_*` variables).
+    * Add your `GEMINI_API_KEY`.
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+4.  **Run Database Migrations & Seeding:**
+    * This command creates the database schema and populates it with initial data.
+    ```bash
+    php artisan migrate --seed
+    ```
+
+5.  **Install JavaScript Dependencies & Build:**
+    ```bash
+    npm install
+    npm run dev
+    ```
+
+6.  **Serve the Application:**
+    ```bash
+    php artisan serve
+    ```
+    The application will be accessible at `http://127.0.0.1:8000`.
+
+---
